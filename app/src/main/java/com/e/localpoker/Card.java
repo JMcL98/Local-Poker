@@ -6,18 +6,18 @@ class Card {
     public int index;
     private boolean dealt;
 
-    public Card(char suit, int value, int index) {
+    Card(char suit, int value, int index) {
         this.suit = suit;
         this.value = value;
         this.index = index;
         dealt = false;
     }
 
-    public boolean checkDealtStatus() {
+    boolean checkDealtStatus() {
         return dealt;
     }
 
-    public Card dealCard() {
+    Card dealCard() {
         dealt = true;
         return this;
     }
@@ -26,7 +26,7 @@ class Card {
         dealt = false;
     }
 
-    public String getCardValue() {
+    String getCardValue() {
         return suit + " " + value;
     }
 
