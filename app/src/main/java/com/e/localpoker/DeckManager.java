@@ -1,12 +1,16 @@
 package com.e.localpoker;
 
+import java.util.Random;
+
 public class DeckManager {
 
-    private Card[] deck = null;
+    private Card[] deck = new Card[52];
     private boolean deckInitialised = false;
+    private Random rng;
 
     public DeckManager() {
         deckInitialised = initialiseDeck();
+        rng = new Random();
 
     }
 
@@ -37,5 +41,30 @@ public class DeckManager {
             i++;
         }
         return true;
+    }
+
+    public Card[] dealHand() {
+        int i = rng.nextInt(51);
+        boolean card1 = false;
+        boolean card2 = false;
+        Card[] hand = new Card[2];
+        while (!card1) {
+            if (!deck[i].checkDealtStatus()) {
+                hand[0] = deck[i].dealCard();
+                card1 = true;
+            } else {
+                i = rng.nextInt(51);
+            }
+        }
+        while (!card2) {
+            if (!deck[i].checkDealtStatus()) {
+                hand[1] = deck[i].dealCard();
+                card2 = true;
+            } else {
+                i = rng.nextInt(51);
+            }
+        }
+
+        return hand;
     }
 }

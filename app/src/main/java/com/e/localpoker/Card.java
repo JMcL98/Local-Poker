@@ -3,7 +3,7 @@ package com.e.localpoker;
 class Card {
     private char suit;
     private int value;
-    private int index;
+    public int index;
     private boolean dealt;
 
     public Card(char suit, int value, int index) {
@@ -21,4 +21,13 @@ class Card {
         dealt = true;
         return this;
     }
+
+    public void reset() {
+        dealt = false;
+    }
+
+    public String getCardValue() {
+        return suit + " " + value;
+    }
+
 }
