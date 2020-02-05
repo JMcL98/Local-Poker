@@ -2,16 +2,22 @@ package com.e.localpoker;
 
 import java.util.Random;
 
-public class DeckManager {
+class DeckManager {
 
     private Card[] deck = new Card[52];
     private boolean deckInitialised = false;
     private Random rng;
 
-    public DeckManager() {
+    DeckManager() {
         deckInitialised = initialiseDeck();
         rng = new Random();
 
+    }
+
+    void resetDeck() {
+        for (int i = 0; i < 52; i++) {
+            deck[i].reset();
+        }
     }
 
     private boolean initialiseDeck() {

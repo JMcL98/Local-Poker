@@ -21,6 +21,6 @@ public class MainActivity extends AppCompatActivity {
     public void dealButton(View v) {
         Card[] hand;
         hand = deckManager.dealHand();
-        Log.d("Jordan", hand[0].getCardValue());
+        Log.d("Jordan", Integer.toString(hand[0].getValue()));
     }
 }

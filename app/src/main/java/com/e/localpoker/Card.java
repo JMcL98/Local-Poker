@@ -26,8 +26,12 @@ class Card {
         dealt = false;
     }
 
-    String getCardValue() {
-        return suit + " " + value;
+    int getValue() {
+        return value;
+    }
+
+    char getSuit() {
+        return suit;
     }
 
 }
