@@ -10,7 +10,6 @@ class HandStrength {
             handStrength += 50;
         }
 
-
         return handStrength;
     }
 
@@ -36,6 +35,7 @@ class HandStrength {
                     numClubs++;
             }
         }
+
         if (numHearts > 4 || numSpades > 4 || numDiamonds > 4 || numClubs > 4) {
             flush = true;
         }
@@ -48,6 +48,8 @@ class HandStrength {
     }
 
     int checkStraight(Card[] hand) {
+        // find lowest number, keep checking up until failure
+        // when 4 cards left no straight is possible
 
         return 0;
     }
@@ -58,6 +60,8 @@ class HandStrength {
     }
 
     int checkFullHouse(Card[] hand) {
+        // check three of a kind
+        // check pair
 
         return 0;
     }
@@ -67,12 +71,8 @@ class HandStrength {
         return 0;
     }
 
-    int checkTwoPair(Card[] hand) {
-
-        return 0;
-    }
-
     int checkPair(Card[] hand) {
+        int numberOfPairs = 0;
 
         return 0;
     }
