@@ -51,10 +51,31 @@ class HandStrength {
         // find lowest number, keep checking up until failure
         // when 4 cards left no straight is possible
 
+
+
         return 0;
     }
 
     int checkFourOfAKind(Card[] hand) {
+
+        int i = 0;
+        int numMatches = 0;
+        while (i < 4) {
+            int v = hand[i].getValue();
+            for (int j = i + 1; j < 7; j++) {
+                if (hand[j].getValue() == v) {
+                    numMatches++;
+                }
+            }
+            switch (numMatches) {
+                case 3:
+                    return 3000 + v;
+                case 4:
+                    return 4000 + v;
+            }
+            numMatches = 0;
+            i++;
+        }
 
         return 0;
     }
@@ -74,6 +95,9 @@ class HandStrength {
     int checkPair(Card[] hand) {
         int numberOfPairs = 0;
 
+
         return 0;
     }
+
+
 }
