@@ -19,8 +19,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void dealButton(View v) {
-        Card[] hand;
-        hand = deckManager.dealHand();
-        Log.d("Jordan", Integer.toString(hand[0].getValue()));
+        Card[] hand = new Card[2];
+        hand[0] = deckManager.dealCard();
+        hand[1] = deckManager.dealCard();
+
+        Log.d("Jordan", hand[0].getSuit() + (hand[0].getValue()) + " " + hand[1].getSuit() + (hand[1].getValue()));
     }
 }

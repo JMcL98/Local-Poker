@@ -50,6 +50,21 @@ class HandStrength {
     int checkStraight(Card[] hand) {
         // find lowest number, keep checking up until failure
         // when 4 cards left no straight is possible
+        boolean lowestAce = false;
+        Card lowestCard;
+        lowestCard = hand[0];
+        for (int i = 1; i < hand.length; i++) {
+            if (hand[i].getValue() == 13) {
+                lowestAce = true;
+                lowestCard = hand[i];
+                break;
+            }
+            if (hand[i].getValue() < lowestCard.getValue()) {
+                lowestCard = hand[i];
+            }
+        }
+
+
 
 
 

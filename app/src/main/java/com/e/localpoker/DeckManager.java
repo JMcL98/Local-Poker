@@ -1,5 +1,7 @@
 package com.e.localpoker;
 
+import android.widget.Switch;
+
 import java.util.Random;
 
 class DeckManager {
@@ -49,7 +51,7 @@ class DeckManager {
         return true;
     }
 
-    public Card[] dealHand() {
+    Card[] dealHand() {
         int i = rng.nextInt(51);
         boolean card1 = false;
         boolean card2 = false;
@@ -72,5 +74,28 @@ class DeckManager {
         }
 
         return hand;
+    }
+
+    Card dealCard() {
+        int i = rng.nextInt(51);
+        int[] cardsChecked = new int[52];
+        /*for (int j = 0; j < cardsChecked.length; j++) {
+            cardsChecked[j] = -1;
+        }*/
+        for (int j = 0; j < 500; j++) {
+            if (!deck[i].checkDealtStatus()) {
+                return deck[i];
+            }
+            i = rng.nextInt(51);
+            /*cardsChecked[j] = i;
+            i = rng.nextInt(51);
+            for (int a = 1; a < cardsChecked.length; a++) {
+                if (i == cardsChecked[a]) {
+                    i = rng.nextInt();
+                }
+            }*/
+        }
+        return null;
+
     }
 }
