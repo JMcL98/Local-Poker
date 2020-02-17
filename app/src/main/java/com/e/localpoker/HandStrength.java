@@ -2,9 +2,9 @@ package com.e.localpoker;
 
 import android.widget.Switch;
 
-class HandStrength {
+final class HandStrength {
 
-    int calculateStrength(Card[] hand) {
+    static int calculateStrength(Card[] hand) {
         int handStrength = 0;
         if (checkFlush(hand) > 1) {
             handStrength += 50;
@@ -13,7 +13,7 @@ class HandStrength {
         return handStrength;
     }
 
-    int checkFlush(Card[] hand) {
+    private static int checkFlush(Card[] hand) {
         boolean flush = false;
         int numHearts = 0;
         int numSpades = 0;
@@ -47,7 +47,7 @@ class HandStrength {
         }
     }
 
-    int checkStraight(Card[] hand) {
+    private static int checkStraight(Card[] hand) {
         // find lowest number, keep checking up until failure
         // when 4 cards left no straight is possible
         boolean lowestAce = false;
@@ -71,7 +71,7 @@ class HandStrength {
         return 0;
     }
 
-    int checkFourOfAKind(Card[] hand) {
+    private static int checkFourOfAKind(Card[] hand) {
 
         int i = 0;
         int numMatches = 0;
@@ -95,19 +95,19 @@ class HandStrength {
         return 0;
     }
 
-    int checkFullHouse(Card[] hand) {
+    private static int checkFullHouse(Card[] hand) {
         // check three of a kind
         // check pair
 
         return 0;
     }
 
-    int checkThreeOfAKind(Card[] hand) {
+    private static int checkThreeOfAKind(Card[] hand) {
 
         return 0;
     }
 
-    int checkPair(Card[] hand) {
+    private static int checkPair(Card[] hand) {
         int numberOfPairs = 0;
 
 

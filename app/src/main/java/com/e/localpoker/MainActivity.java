@@ -19,10 +19,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void dealButton(View v) {
-        Card[] hand = new Card[2];
-        hand[0] = deckManager.dealCard();
-        hand[1] = deckManager.dealCard();
 
-        Log.d("Jordan", hand[0].getSuit() + (hand[0].getValue()) + " " + hand[1].getSuit() + (hand[1].getValue()));
+        Card[] hand = new Card[7];
+        for (Card card : hand) {
+            card = deckManager.dealCard();
+            Log.d("Jordan", card.getSuit() + "" + card.getValue());
+        }
+        //int strength = HandStrength.calculateStrength(hand);
+        //Log.d("Jordan", "Strength of hand: " + strength);
+
+        /*if (deckManager.deckInitialised) {
+            for (int i = 0; i < 53; i++) {
+                Card card = deckManager.dealCard();
+                if (card.getValue() > 0) {
+                    Log.d("Jordan", i + ": " + card.getSuit() + card.getValue() + "\n");
+                } else {
+                    Log.d("Jordan", i + ": Last card dealt");
+                }
+            }
+            deckManager.resetDeck();
+        }*/
     }
 }
