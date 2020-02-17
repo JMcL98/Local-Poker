@@ -1,8 +1,9 @@
 package com.e.localpoker;
 
+import android.util.Log;
 import android.widget.Switch;
 
-final class HandStrength {
+class HandStrength {
 
     static int calculateStrength(Card[] hand) {
         int handStrength = 0;
@@ -19,8 +20,8 @@ final class HandStrength {
         int numSpades = 0;
         int numDiamonds = 0;
         int numClubs = 0;
-        for (Card card : hand) {
-            char suit = card.getSuit();
+        for (int i = 0; i < 7; i++) {
+            char suit = hand[i].getSuit();
             switch (suit) {
                 case 'h':
                     numHearts++;

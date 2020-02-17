@@ -21,12 +21,12 @@ public class MainActivity extends AppCompatActivity {
     public void dealButton(View v) {
 
         Card[] hand = new Card[7];
-        for (Card card : hand) {
-            card = deckManager.dealCard();
-            Log.d("Jordan", card.getSuit() + "" + card.getValue());
+        for (int i = 0; i < 7; i++) {
+            hand[i] = deckManager.dealCard();
+            Log.d("Jordan", hand[i].getSuit() + "" + hand[i].getValue());
         }
-        //int strength = HandStrength.calculateStrength(hand);
-        //Log.d("Jordan", "Strength of hand: " + strength);
+        int strength = HandStrength.calculateStrength(hand);
+        Log.d("Jordan", "Strength of hand: " + strength);
 
         /*if (deckManager.deckInitialised) {
             for (int i = 0; i < 53; i++) {
