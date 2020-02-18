@@ -21,8 +21,15 @@ public class MainActivity extends AppCompatActivity {
     public void dealButton(View v) {
 
         Card[] hand = new Card[7];
+        /*hand[6] = deckManager.dealCard(1);
+        hand[5] = deckManager.dealCard(14);
+        hand[4] = deckManager.dealCard(14+13);
+        hand[3] = deckManager.dealCard(14+13+13);
+        hand[2] = deckManager.dealCard(5);
+        hand[1] = deckManager.dealCard(49);
+        hand[0] = deckManager.dealCard(37);*/
         for (int i = 0; i < 7; i++) {
-            hand[i] = deckManager.dealCard();
+            hand[i] = deckManager.dealCard(60);
             Log.d("Jordan", hand[i].getSuit() + "" + hand[i].getValue());
         }
         int strength = HandStrength.calculateStrength(hand);

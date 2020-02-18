@@ -7,8 +7,10 @@ class HandStrength {
 
     static int calculateStrength(Card[] hand) {
         int handStrength = 0;
-        if (checkFlush(hand) > 1) {
-            handStrength += 50;
+        if ((handStrength += checkFourOfAKind(hand)) > 1) {
+            return handStrength;
+        } else if ((handStrength += checkFlush(hand)) > 1) {
+            return handStrength;
         }
 
         return handStrength;
@@ -75,7 +77,7 @@ class HandStrength {
     private static int checkFourOfAKind(Card[] hand) {
 
         int i = 0;
-        int numMatches = 0;
+        int numMatches = 1;
         while (i < 4) {
             int v = hand[i].getValue();
             for (int j = i + 1; j < 7; j++) {
@@ -83,13 +85,10 @@ class HandStrength {
                     numMatches++;
                 }
             }
-            switch (numMatches) {
-                case 3:
-                    return 3000 + v;
-                case 4:
-                    return 4000 + v;
+            if (numMatches == 4) {
+                return 400 + v;
             }
-            numMatches = 0;
+            numMatches = 1;
             i++;
         }
 
