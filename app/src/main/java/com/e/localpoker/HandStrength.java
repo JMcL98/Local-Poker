@@ -10,14 +10,21 @@ final class HandStrength {
         int i = checkStraight(hand);
         if (i >= 100000) {
             return i;
-        } else if ((j = checkFourOfAKind(hand)) > 75000) {
+        } else if ((j = checkFourOfAKind(hand)) >= 75000) {
+            return j;
+        } else if ((j = checkFullHouse(hand)) >= 60000) {
             return j;
         } else if ((j = checkFlush(hand)) >= 50000) {
             return j;
         } else if (i >= 10000) {
             return i;
+        } else if ((j = checkThreeOfAKind(hand)) >= 500) {
+            return j;
+        } else if ((j = checkPair(hand)) >= 200) {
+            return j;
         }
-        return 0;
+        Card[] orderedHand = orderHand(hand);
+        return orderedHand[0].getValue();
     }
 
     private static int checkFlush(Card[] hand) {
@@ -137,21 +144,51 @@ final class HandStrength {
     }
 
     private static int checkFullHouse(Card[] hand) {
-        // check three of a kind
-        // check 2 pair
-
+        int i;
+        if ((i = checkThreeOfAKind(hand)) > 0) {
+            if (checkPair(hand) >= 200) {
+                return 60000 + i;
+            }
+        }
         return 0;
     }
 
     private static int checkThreeOfAKind(Card[] hand) {
-
+        int v;
+        Card[] orderedHand = orderHand(hand);
+        for (int i = 0; i < (orderedHand.length - 2); i++) {
+            v = orderedHand[i].getValue();
+            if (orderedHand[i + 1].getValue() == v) {
+                if (orderedHand[i + 2].getValue() == v) {
+                    return 500 + v;
+                }
+            }
+        }
         return 0;
     }
 
     private static int checkPair(Card[] hand) {
         int numberOfPairs = 0;
-
-
+        int highPair = 0;
+        Card[] orderedHand = orderHand(hand);
+        for (int i = 0; i < orderedHand.length - 1; i++) {
+            if (orderedHand[i].getValue() == orderedHand[i + 1].getValue()) {
+                if (highPair == 0) { highPair = orderedHand[i].getValue(); }
+                numberOfPairs++;
+                if (i < 5 && (orderedHand[i].getValue() == orderedHand[i + 2].getValue())) {
+                    i++;
+                    if (i < 4 && (orderedHand[i].getValue() == orderedHand[i + 3].getValue())) {
+                        i++;
+                    }
+                }
+            }
+            if (numberOfPairs == 2) {
+                return 200 + highPair;
+            }
+        }
+        if (numberOfPairs == 1) {
+            return 100 + highPair;
+        }
         return 0;
     }
 
