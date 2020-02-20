@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         deckManager = new DeckManager();
-        testPlayer = new Player("Test");
+        testPlayer = new Player("Test", 0);
         testPlayer.addChips(100);
     }
 

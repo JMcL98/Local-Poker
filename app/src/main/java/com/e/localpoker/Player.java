@@ -2,13 +2,15 @@ package com.e.localpoker;
 
 class Player {
 
-    private String playerName;
+    private final int playerID;
+    private final String playerName;
     private int chips;
     private Card[] hand;
     private int numCardsInHand;
 
-    Player (String name) {
+    Player (String name, int playerID) {
         playerName = name;
+        this.playerID = playerID;
         chips = 0;
         numCardsInHand = 0;
         hand = new Card[7];
@@ -37,5 +39,13 @@ class Player {
         Card[] returnHand = new Card[numCardsInHand];
         System.arraycopy(hand, 0, returnHand, 0, numCardsInHand);
         return returnHand;
+    }
+
+    String getPlayerName() {
+        return playerName;
+    }
+
+    int getPlayerID() {
+        return playerID;
     }
 }
