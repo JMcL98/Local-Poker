@@ -55,8 +55,13 @@ class DeckManager {
         return true;
     }
 
-    Card dealCard() {
-        int i = rng.nextInt(52);
+    Card dealCard(int index) {
+        int i;
+        if (index > 52) {
+            i = rng.nextInt(52);
+        } else {
+            i = index;
+        }
         for (int j = 0; j < 500; j++) {
             if (!deck[i].checkDealtStatus()) {
                 return deck[i].dealCard();

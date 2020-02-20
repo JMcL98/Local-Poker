@@ -20,7 +20,7 @@ final class HandStrength {
             return i;
         } else if ((j = checkThreeOfAKind(hand)) >= 500) {
             return j;
-        } else if ((j = checkPair(hand)) >= 200) {
+        } else if ((j = checkPair(hand)) >= 100) {
             return j;
         }
         Card[] orderedHand = orderHand(hand);

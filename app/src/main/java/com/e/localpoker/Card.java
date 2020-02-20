@@ -22,7 +22,7 @@ class Card {
         return this;
     }
 
-    public void reset() {
+    void reset() {
         dealt = false;
     }
 
