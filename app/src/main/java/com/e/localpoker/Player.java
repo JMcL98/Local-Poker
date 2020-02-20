@@ -2,40 +2,40 @@ package com.e.localpoker;
 
 class Player {
 
+    private String playerName;
     private int chips;
     private Card[] hand;
     private int numCardsInHand;
 
-    public Player () {
+    Player (String name) {
+        playerName = name;
         chips = 0;
         numCardsInHand = 0;
         hand = new Card[7];
         resetHand();
     }
 
-    public void addChips(int numChips) {
-        this.chips += chips;
+    void addChips(int numChips) {
+        this.chips += numChips;
     }
 
-    public void addCard(Card newCard) {
+    void addCard(Card newCard) {
         if (numCardsInHand < 7) {
             hand[numCardsInHand] = newCard;
             numCardsInHand++;
         }
     }
 
-    public void resetHand() {
-        for (Card card : hand) {
-            card = null;
+    void resetHand() {
+        for (int i = 0; i < numCardsInHand; i++) {
+            this.hand[i] = null;
         }
         numCardsInHand = 0;
     }
 
-    public Card[] getHand() {
+    Card[] getHand() {
         Card[] returnHand = new Card[numCardsInHand];
-        for (int i = 0; i < numCardsInHand; i++) {
-            returnHand[i] = hand[i];
-        }
+        System.arraycopy(hand, 0, returnHand, 0, numCardsInHand);
         return returnHand;
     }
 }

@@ -1,9 +1,9 @@
 package com.e.localpoker;
 
 class Card {
-    private char suit;
-    private int value;
-    public int index;
+    private final char suit;
+    private final int value;
+    private final int index;
     private boolean dealt;
 
     Card(char suit, int value, int index) {
@@ -32,6 +32,10 @@ class Card {
 
     char getSuit() {
         return suit;
+    }
+
+    int getIndex() {
+        return index;
     }
 
 }

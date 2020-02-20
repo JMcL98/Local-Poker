@@ -4,11 +4,24 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-public class GameManager extends Service {
+public class HostGameManager extends Service {
 
-    Player[] players;
-    public GameManager(Player[] players) {
+    private Player[] players;
+    private int chipsPot;
+
+    public HostGameManager(Player[] players) {
         this.players = players;
+        this.chipsPot = 0;
+    }
+
+    void addToPot(int chips) {
+        this.chipsPot += chips;
+    }
+
+    int takePot() {
+        int temp = this.chipsPot;
+        this.chipsPot = 0;
+        return temp;
     }
 
     @Override

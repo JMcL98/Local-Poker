@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         deckManager = new DeckManager();
-        testPlayer = new Player();
+        testPlayer = new Player("Test");
         testPlayer.addChips(100);
     }
 
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         }
         int strength = HandStrength.calculateStrength(testPlayer.getHand());
         Log.d("Jordan", "Strength of hand: " + strength);
+        testPlayer.addChips(strength);
         testPlayer.resetHand();
         deckManager.resetDeck();
 

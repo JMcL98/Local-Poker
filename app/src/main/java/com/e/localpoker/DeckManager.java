@@ -7,7 +7,7 @@ import java.util.Random;
 class DeckManager {
 
     private Card[] deck = new Card[52];
-    boolean deckInitialised;
+    private boolean deckInitialised;
     private Random rng;
 
     DeckManager() {
