@@ -10,9 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".HostGameManager"
+            android:name=".ClientGameManager"
             android:enabled="true"
             android:exported="true"></service>
+        <service
+            android:name=".HostGameManager"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
