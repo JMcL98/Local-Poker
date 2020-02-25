@@ -4,18 +4,49 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import java.util.Arrays;
+
 public class HostGameManager extends Service {
 
     private Player[] players;
     private int chipsPot;
+    private int gameStage;
+    private DeckManager dm;
+    private Card[] communityCards;
 
-    public HostGameManager(Player[] players) {
+    public HostGameManager(Player[] players, DeckManager dm) {
         this.players = players;
         this.chipsPot = 0;
+        this.gameStage = 0;
+        this.dm = dm;
+        this.communityCards = new Card[5];
     }
 
     void addToPot(int chips) {
         this.chipsPot += chips;
+    }
+
+    void advanceStage() {
+        gameStage++;
+    }
+
+    void resetRounds() {
+        for (Player player : players) {
+            player.resetHand();
+        }
+        Arrays.fill(communityCards, null);
+        dm.resetDeck();
+        gameStage = 0;
+    }
+
+    void finishRound(int winningPlayerID) {
+        for (Player player : players) {
+            if (player.getPlayerID() == winningPlayerID) {
+                player.addChips(this.chipsPot);
+            }
+        }
+        chipsPot = 0;
+        resetRounds();
     }
 
     int takePot() {
@@ -24,10 +55,20 @@ public class HostGameManager extends Service {
         return temp;
     }
 
+    void initialDeal() {
+        for (Player player : players) {
+            player.addCard(dm.dealCard(60));
+            player.addCard(dm.dealCard(60));
+        }
+    }
+
+    void dealCommunityCard(int index) {
+        communityCards[index] = dm.dealCard(60);
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return null;
     }
 
 
