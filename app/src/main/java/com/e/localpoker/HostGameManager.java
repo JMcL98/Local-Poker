@@ -29,6 +29,8 @@ public class HostGameManager extends Service {
         this.communityCards = new Card[5];
         this.serviceName = "LocalPoker";
         this.calledContext = context;
+        nsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
+        registerService(9000);
     }
 
     void registerService(int port) {
@@ -38,7 +40,6 @@ public class HostGameManager extends Service {
         info.setServiceType("_http._tcp.");
         info.setPort(port);
 
-        nsdManager = (NsdManager) this.calledContext.getSystemService(Context.NSD_SERVICE);
 
         if (nsdManager != null) {
             nsdManager.registerService(info, NsdManager.PROTOCOL_DNS_SD, registrationListener);
@@ -68,6 +69,14 @@ public class HostGameManager extends Service {
 
             }
         };
+    }
+
+    @Override
+    public void onDestroy() {
+        if (nsdManager != null) {
+            nsdManager.unregisterService(registrationListener);
+        }
+        super.onDestroy();
     }
 
     void addToPot(int chips) {
