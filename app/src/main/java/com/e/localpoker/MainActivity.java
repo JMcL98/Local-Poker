@@ -10,15 +10,28 @@ public class MainActivity extends AppCompatActivity {
 
     DeckManager deckManager;
     Player testPlayer;
+    Player[] players;
+    String serviceName = "LocalPoker";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         deckManager = new DeckManager();
+        players = new Player[1];
         testPlayer = new Player("Test", 0);
-        testPlayer.addChips(100);
+        players[0] = testPlayer;
+        players[0].addChips(100);
+    }
+
+    public void onHostClick(View v) {
+        HostGameManager hostManager = new HostGameManager(players, deckManager, this);
+        serviceName = hostManager.serviceName;
+        hostManager.initialiseListener();
+    }
+
+    public void onClientClick(View v) {
+        ClientGameManager clientManger = new ClientGameManager(this, this.serviceName);
     }
 
     public void dealButton(View v) {
