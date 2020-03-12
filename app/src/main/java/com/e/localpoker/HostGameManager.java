@@ -17,7 +17,6 @@ public class HostGameManager extends Service {
     private int gameStage;
     private DeckManager dm;
     private Card[] communityCards;
-    NsdHost nsdHost;
 
     public HostGameManager(Player[] players, DeckManager dm, Context context) {
         this.players = players;
@@ -25,7 +24,6 @@ public class HostGameManager extends Service {
         this.gameStage = 0;
         this.dm = dm;
         this.communityCards = new Card[5];
-        nsdHost = new NsdHost(context);
     }
 
 

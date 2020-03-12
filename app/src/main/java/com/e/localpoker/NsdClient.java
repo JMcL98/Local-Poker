@@ -30,7 +30,7 @@ public class NsdClient {
             toast.show();
             if (serviceInfo.getServiceName().equals(serviceName)) {
                 Log.d("Jordan", "Same Machine");
-                Toast toast2 = Toast.makeText(calledContext, "Same machine", Toast.LENGTH_SHORT);
+                Toast toast2 = Toast.makeText(calledContext, "Resolve: Same machine", Toast.LENGTH_SHORT);
                 toast2.show();
                 return;
             }
@@ -79,7 +79,7 @@ public class NsdClient {
                     // The name of the service tells the user what they'd be
                     // connecting to. It could be "Bob's Chat App".
                     Log.d("Jordan", "Same machine");
-                    Toast toast3 = Toast.makeText(calledContext, "Same Machine", Toast.LENGTH_SHORT);
+                    Toast toast3 = Toast.makeText(calledContext, "Same Machine 1", Toast.LENGTH_SHORT);
                     toast3.show();
                 } else {
                     Log.d("Jordan", "Different Machine");

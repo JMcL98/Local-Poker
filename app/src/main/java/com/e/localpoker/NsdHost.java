@@ -17,9 +17,10 @@ public class NsdHost {
     public NsdHost(Context context) {
         this.serviceName = "LocalPoker";
         this.calledContext = context;
-        registerService(HOST_PORT);
         nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
         initialiseListener();
+        registerService(HOST_PORT);
+
     }
 
     void registerService(int port) {
@@ -36,7 +37,7 @@ public class NsdHost {
         }
     }
 
-    void initialiseListener() {
+    private void initialiseListener() {
         registrationListener = new NsdManager.RegistrationListener() {
 
             @Override

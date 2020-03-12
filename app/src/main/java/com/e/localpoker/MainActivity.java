@@ -3,6 +3,8 @@ package com.e.localpoker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
@@ -12,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     Player testPlayer;
     Player[] players;
     String serviceName = "LocalPoker";
+    hThread hthread1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +25,22 @@ public class MainActivity extends AppCompatActivity {
         testPlayer = new Player("Test", 0);
         players[0] = testPlayer;
         players[0].addChips(100);
+        hthread1 = new hThread(this);
+        hthread1.start();
     }
 
     public void onHostClick(View v) {
         HostGameManager hostManager = new HostGameManager(players, deckManager, this);
-        serviceName = hostManager.serviceName;
-        hostManager.initialiseListener();
+        Message hostMessage = Message.obtain();
+        hostMessage.what = 1;
+        hthread1.getHandler().sendMessage(hostMessage);
     }
 
     public void onClientClick(View v) {
-        ClientGameManager clientManger = new ClientGameManager(this, this.serviceName);
+        ClientGameManager clientManger = new ClientGameManager(this);
+        Message clientMessage = Message.obtain();
+        clientMessage.what = 2;
+        hthread1.getHandler().sendMessage(clientMessage);
     }
 
     public void dealButton(View v) {
@@ -67,5 +76,10 @@ public class MainActivity extends AppCompatActivity {
             }
             deckManager.resetDeck();
         }*/
+    }
+
+    public void onDestroy() {
+        hthread1.quit();
+        super.onDestroy();
     }
 }
