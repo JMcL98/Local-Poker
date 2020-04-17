@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         hostBundle.putParcelable("hostmanager", hostManager);
 
         Message hostMessage = Message.obtain();
+        hostMessage.setData(hostBundle);
         hostMessage.what = 1;
         hthread1.getHandler().sendMessage(hostMessage);
     }

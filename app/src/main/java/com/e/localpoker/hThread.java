@@ -29,7 +29,8 @@ public class hThread extends HandlerThread {
                 switch (message.what) {
                     case (1):
                         Bundle bundle = message.getData();
-
+                        HostGameManager hgm = (HostGameManager) bundle.get("hostmanager");
+                        hgm.startHostNsd();
 
                         break;
                     case (2):
