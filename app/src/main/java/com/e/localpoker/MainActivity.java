@@ -7,6 +7,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,16 +31,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onHostClick(View v) {
-        HostGameManager hostManager = new HostGameManager(players, deckManager, this);
+        HostGameManager hostManager = new HostGameManager(deckManager, this);
+        Bundle hostBundle = new Bundle();
+        hostBundle.putParcelable("hostmanager", hostManager);
+
         Message hostMessage = Message.obtain();
         hostMessage.what = 1;
         hthread1.getHandler().sendMessage(hostMessage);
     }
 
     public void onClientClick(View v) {
-        ClientGameManager clientManger = new ClientGameManager(this);
+        EditText e1 = (EditText) findViewById(R.id.editText);
+        String dName = e1.getText().toString();
+        Bundle clientBundle = new Bundle();
+        clientBundle.putString("devicename", dName);
+        ClientGameManager clientManger = new ClientGameManager(this, dName);
         Message clientMessage = Message.obtain();
         clientMessage.what = 2;
+        clientMessage.setData(clientBundle);
         hthread1.getHandler().sendMessage(clientMessage);
     }
 

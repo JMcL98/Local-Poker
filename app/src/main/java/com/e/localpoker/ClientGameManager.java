@@ -17,9 +17,10 @@ public class ClientGameManager extends Service {
 
     HostGameManager host;
     NsdClient nsdClient;
+    String name;
 
-    ClientGameManager(Context context) {
-        nsdClient = new NsdClient(context, "LocalPoker");
+    ClientGameManager(Context context, String name) {
+        //nsdClient = new NsdClient(context, "LocalPoker", name);
     }
 
 

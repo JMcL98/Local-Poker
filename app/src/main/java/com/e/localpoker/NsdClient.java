@@ -6,15 +6,19 @@ import android.net.nsd.NsdServiceInfo;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 
 public class NsdClient {
 
     private InetAddress hostAddress;
     private int hostPort;
+    private String deviceName;
     Context calledContext;
     NsdManager nsdManager;
     NsdManager.DiscoveryListener listener;
+    Socket hostSocket;
     NsdManager.ResolveListener resolveListener = new NsdManager.ResolveListener() {
         @Override
         public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
@@ -37,13 +41,22 @@ public class NsdClient {
 
             hostPort = serviceInfo.getPort();
             hostAddress = serviceInfo.getHost();
+            Log.d("Jordan", "Port = " + hostPort);
+            Log.d("Jordan", "Address = " + hostAddress);
+
+            try {
+                hostSocket = new Socket(hostAddress, hostPort);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     };
     String serviceName;
 
-    public NsdClient(Context context, final String serviceN) {
+    public NsdClient(Context context, final String serviceN, String deviceName) {
         this.calledContext = context;
         this.serviceName = serviceN;
+        this.deviceName = deviceName;
         this.listener = new NsdManager.DiscoveryListener() {
             @Override
             public void onStartDiscoveryFailed(String serviceType, int errorCode) {

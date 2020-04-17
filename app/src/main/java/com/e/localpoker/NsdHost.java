@@ -5,9 +5,15 @@ import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 public class NsdHost {
 
     int HOST_PORT = 9000;
+    ServerSocket serverSocket;
+    Socket thisSocket;
 
     String serviceName;
     Context calledContext;
@@ -55,6 +61,11 @@ public class NsdHost {
                 Toast toast = Toast.makeText(calledContext, "Service Registered", Toast.LENGTH_SHORT);
                 toast.show();
                 serviceName = serviceInfo.getServiceName();
+                try {
+                    serverSocket =  new ServerSocket(HOST_PORT);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

@@ -7,10 +7,13 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 
+import java.util.Objects;
+
 public class hThread extends HandlerThread {
 
     private Handler handler;
     private Context calledContext;
+    private String deviceName;
 
     public hThread(Context context) {
         super("hThread1");
@@ -25,12 +28,13 @@ public class hThread extends HandlerThread {
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case (1):
-                        //Bundle bundle = message.getData();
-                        NsdHost hostObj = new NsdHost(calledContext);
+                        Bundle bundle = message.getData();
+
 
                         break;
                     case (2):
-                        NsdClient clientObj = new NsdClient(calledContext, "Client");
+                        Bundle receivedClientBundle = message.getData();
+                        NsdClient clientObj = new NsdClient(calledContext, "Client", Objects.requireNonNull(receivedClientBundle.get("devicename")).toString());
                         break;
                 }
             }
