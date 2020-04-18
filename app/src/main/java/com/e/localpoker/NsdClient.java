@@ -3,9 +3,12 @@ package com.e.localpoker;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -19,6 +22,9 @@ public class NsdClient {
     NsdManager nsdManager;
     NsdManager.DiscoveryListener listener;
     Socket hostSocket;
+    DataOutputStream clientOutput;
+    DataInputStream clientInput;
+
     NsdManager.ResolveListener resolveListener = new NsdManager.ResolveListener() {
         @Override
         public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
@@ -46,9 +52,12 @@ public class NsdClient {
 
             try {
                 hostSocket = new Socket(hostAddress, hostPort);
+                clientOutput = new DataOutputStream(hostSocket.getOutputStream());
+                sendName();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     };
     String serviceName;
@@ -117,5 +126,12 @@ public class NsdClient {
         if (nsdManager != null) {
             nsdManager.stopServiceDiscovery(listener);
         }
+    }
+
+    void sendName() throws IOException {
+        clientOutput.writeByte(1);
+        clientOutput.writeUTF(deviceName);
+        clientOutput.flush();
+        clientOutput.close();
     }
 }

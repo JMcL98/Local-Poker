@@ -5,6 +5,7 @@ import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,6 +15,7 @@ public class NsdHost {
     int HOST_PORT = 9000;
     ServerSocket serverSocket;
     Socket thisSocket;
+    DataInputStream hostInput;
 
     String serviceName;
     Context calledContext;
@@ -63,6 +65,8 @@ public class NsdHost {
                 serviceName = serviceInfo.getServiceName();
                 try {
                     serverSocket =  new ServerSocket(HOST_PORT);
+                    thisSocket = serverSocket.accept();
+                    hostInput = new DataInputStream(thisSocket.getInputStream());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -75,9 +79,15 @@ public class NsdHost {
         };
     }
 
-    public void closeService() {
+    void sendCards(Card[][] hands) {
+
+    }
+
+    public void closeService() throws IOException {
         if (nsdManager != null) {
             nsdManager.unregisterService(registrationListener);
+            thisSocket.close();
+            serverSocket.close();
         }
     }
 }
