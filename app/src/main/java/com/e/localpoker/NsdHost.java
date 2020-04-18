@@ -6,6 +6,7 @@ import android.net.nsd.NsdServiceInfo;
 import android.widget.Toast;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,18 +14,22 @@ import java.net.Socket;
 public class NsdHost {
 
     int HOST_PORT = 9000;
+    HostGameManager hgm;
+
     ServerSocket serverSocket;
     Socket thisSocket;
-    DataInputStream hostInput;
+    DataOutputStream hostOutput;
+    boolean acceptingPlayers = false;
 
     String serviceName;
     Context calledContext;
     NsdManager nsdManager;
     NsdManager.RegistrationListener registrationListener;
 
-    public NsdHost(Context context) {
+    public NsdHost(Context context, HostGameManager hgm) {
         this.serviceName = "LocalPoker";
         this.calledContext = context;
+        this.hgm = hgm;
         nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
         initialiseListener();
         registerService(HOST_PORT);
@@ -65,8 +70,8 @@ public class NsdHost {
                 serviceName = serviceInfo.getServiceName();
                 try {
                     serverSocket =  new ServerSocket(HOST_PORT);
-                    thisSocket = serverSocket.accept();
-                    hostInput = new DataInputStream(thisSocket.getInputStream());
+                    acceptingPlayers = true;
+                    acceptPlayers();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -79,8 +84,15 @@ public class NsdHost {
         };
     }
 
-    void sendCards(Card[][] hands) {
+    void sendCard(Card card) {
 
+    }
+
+    void acceptPlayers() throws IOException {
+        while (acceptingPlayers = true) {
+            Socket newSocket = serverSocket.accept();
+            hgm.addPlayer(newSocket);
+        }
     }
 
     public void closeService() throws IOException {

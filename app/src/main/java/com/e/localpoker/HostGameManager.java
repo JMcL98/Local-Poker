@@ -11,6 +11,10 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 
 public class HostGameManager extends Service implements Parcelable {
@@ -18,8 +22,8 @@ public class HostGameManager extends Service implements Parcelable {
     private int MAX_PLAYERS = 10;
     private String HOST_NAME = "Jordan";
 
-    private Player[] players;
-    private int numPlayers = 0;
+    Player[] players;
+    int numPlayers;
     private int chipsPot;
     private int gameStage;
     private DeckManager dm;
@@ -31,22 +35,27 @@ public class HostGameManager extends Service implements Parcelable {
         this.players = new Player[MAX_PLAYERS];
         this.chipsPot = 0;
         this.gameStage = 0;
+        this.numPlayers = 0;
         this.dm = dm;
         this.communityCards = new Card[5];
         this.calledContext = context;
-        addPlayer(HOST_NAME);
     }
 
-    protected HostGameManager(Parcel in) {
-        MAX_PLAYERS = in.readInt();
-        HOST_NAME = in.readString();
-        numPlayers = in.readInt();
-        chipsPot = in.readInt();
-        gameStage = in.readInt();
+
+    void startHostNsd() throws IOException {
+        hostObj = new NsdHost(this.calledContext, this);
+        addPlayer(null);
+        players[0].setPlayerName(HOST_NAME);
     }
 
-    void startHostNsd() {
-        hostObj = new NsdHost(this.calledContext);
+    void startGame() {
+        hostObj.acceptingPlayers = false;
+        for (int i = 0; i < players.length; i++) {
+            if (players[i].getPlayerName() == null) {
+                players[i] = null;
+            }
+        }
+        initialDeal();
     }
 
     void addToPot(int chips) {
@@ -96,10 +105,9 @@ public class HostGameManager extends Service implements Parcelable {
         }
     }
 
-    void addPlayer (String name) {
-        Player newPlayer = new Player(name, numPlayers);
+    void addPlayer(Socket clientSocket) throws IOException {
+        Player newPlayer = new Player(numPlayers, clientSocket);
         this.players[numPlayers] = newPlayer;
-        Log.d("Jordan", "New player added: " + this.players[numPlayers].getPlayerName());
         this.numPlayers++;
     }
 
@@ -108,10 +116,12 @@ public class HostGameManager extends Service implements Parcelable {
         return null;
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
+    protected HostGameManager(Parcel in) {
+        MAX_PLAYERS = in.readInt();
+        HOST_NAME = in.readString();
+        numPlayers = in.readInt();
+        chipsPot = in.readInt();
+        gameStage = in.readInt();
     }
 
     @Override
@@ -121,6 +131,11 @@ public class HostGameManager extends Service implements Parcelable {
         dest.writeInt(numPlayers);
         dest.writeInt(chipsPot);
         dest.writeInt(gameStage);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<HostGameManager> CREATOR = new Creator<HostGameManager>() {
@@ -135,3 +150,5 @@ public class HostGameManager extends Service implements Parcelable {
         }
     };
 }
+
+

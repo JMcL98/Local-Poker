@@ -12,6 +12,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.List;
 
 public class NsdClient {
 
@@ -53,6 +54,7 @@ public class NsdClient {
             try {
                 hostSocket = new Socket(hostAddress, hostPort);
                 clientOutput = new DataOutputStream(hostSocket.getOutputStream());
+                clientInput = new DataInputStream(hostSocket.getInputStream());
                 sendName();
             } catch (IOException e) {
                 e.printStackTrace();

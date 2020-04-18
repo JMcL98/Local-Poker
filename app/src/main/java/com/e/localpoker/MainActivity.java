@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     DeckManager deckManager;
@@ -22,15 +24,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         deckManager = new DeckManager();
-        players = new Player[1];
-        testPlayer = new Player("Test", 0);
-        players[0] = testPlayer;
-        players[0].addChips(100);
         hthread1 = new hThread(this);
         hthread1.start();
     }
 
-    public void onHostClick(View v) {
+    public void onHostClick(View v) throws IOException {
         HostGameManager hostManager = new HostGameManager(deckManager, this);
         Bundle hostBundle = new Bundle();
         hostBundle.putParcelable("hostmanager", hostManager);

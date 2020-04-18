@@ -8,6 +8,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.Objects;
 
 public class hThread extends HandlerThread {
@@ -32,11 +33,15 @@ public class hThread extends HandlerThread {
                     case (1):
                         Bundle bundle = message.getData();
                         hgm = (HostGameManager) bundle.get("hostmanager");
-                        hgm.startHostNsd();
+                        try {
+                            hgm.startHostNsd();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         int i = 1;
                         byte msgType = 0;
                         while (i == 1) {
-                            if (hgm.hostObj.hostInput != null) {
+                            /*if (hgm.hostObj.hostInput != null) {
                                 try {
                                     msgType = hgm.hostObj.hostInput.readByte();
                                 } catch (IOException e) {
@@ -45,12 +50,36 @@ public class hThread extends HandlerThread {
                                 switch (msgType) {
                                     case (1):
                                         try {
-                                            addPlayerToHost(hgm.hostObj.hostInput.readUTF());
+                                            for (int j = 0; j < hgm.players.length; j++) {
+                                                if(hgm.players[i].clientSocket == hgm.hostObj.hostInput.)
+                                            }
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
                                 }
+                            }*/
+                            for (int j = 1; j < hgm.numPlayers; j++) {
+
+                                if ((hgm.players[j].getPlayerName() == null) && (hgm.players[j].playerInput != null)) {
+                                    try {
+                                        msgType = hgm.players[j].playerInput.readByte();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (msgType == 1) {
+                                        try {
+                                            hgm.players[j].setPlayerName(hgm.players[j].playerInput.readUTF());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+
+                                }
                             }
+                            //if (!hgm.hostObj.acceptingPlayers) {
+                             //   i = 0;
+                            //}
                         }
 
 
@@ -67,9 +96,6 @@ public class hThread extends HandlerThread {
         };
     }
 
-    private void addPlayerToHost(String name) {
-        hgm.addPlayer(name);
-    }
 
     Handler getHandler() {
         return handler;
