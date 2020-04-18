@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         String dName = e1.getText().toString();
         Bundle clientBundle = new Bundle();
         clientBundle.putString("devicename", dName);
-        ClientGameManager clientManger = new ClientGameManager(this, dName);
+        ClientGameManager clientManager = new ClientGameManager(this, dName);
+        clientBundle.putParcelable("clientmanager", clientManager);
         Message clientMessage = Message.obtain();
         clientMessage.what = 2;
         clientMessage.setData(clientBundle);

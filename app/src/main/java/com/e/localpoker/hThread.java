@@ -35,7 +35,10 @@ public class hThread extends HandlerThread {
                         break;
                     case (2):
                         Bundle receivedClientBundle = message.getData();
-                        NsdClient clientObj = new NsdClient(calledContext, "Client", Objects.requireNonNull(receivedClientBundle.get("devicename")).toString());
+                        //NsdClient clientObj = new NsdClient(calledContext, "Client", Objects.requireNonNull(receivedClientBundle.get("devicename")).toString());
+                        ClientGameManager cgm = (ClientGameManager) receivedClientBundle.get("clientmanager");
+                        cgm.startClientNsd();
+
                         break;
                 }
             }
