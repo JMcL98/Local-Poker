@@ -7,6 +7,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.io.IOException;
@@ -29,7 +30,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onHostClick(View v) throws IOException {
-        HostGameManager hostManager = new HostGameManager(deckManager, this);
+        Button clientButton = (Button) findViewById(R.id.button2);
+        clientButton.setVisibility(View.INVISIBLE);
+        EditText e1 = (EditText) findViewById(R.id.editText);
+        String dName = e1.getText().toString();
+        HostGameManager hostManager = new HostGameManager(deckManager, this, dName, this);
         Bundle hostBundle = new Bundle();
         hostBundle.putParcelable("hostmanager", hostManager);
 
@@ -40,11 +45,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClientClick(View v) {
+        Button hostButton = (Button) findViewById(R.id.button);
+        hostButton.setVisibility(View.INVISIBLE);
         EditText e1 = (EditText) findViewById(R.id.editText);
         String dName = e1.getText().toString();
         Bundle clientBundle = new Bundle();
         clientBundle.putString("devicename", dName);
-        ClientGameManager clientManager = new ClientGameManager(this, dName);
+        ClientGameManager clientManager = new ClientGameManager(this, dName, this);
         clientBundle.putParcelable("clientmanager", clientManager);
         Message clientMessage = Message.obtain();
         clientMessage.what = 2;
@@ -85,6 +92,15 @@ public class MainActivity extends AppCompatActivity {
             }
             deckManager.resetDeck();
         }*/
+    }
+
+    public void onClickStart(View v) {
+
+    }
+
+    public void makeStartVisible() {
+        Button startButton = (Button) findViewById(R.id.startButton);
+        startButton.setVisibility(View.VISIBLE);
     }
 
     public void onDestroy() {

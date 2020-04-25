@@ -1,5 +1,6 @@
 package com.e.localpoker;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -17,14 +18,21 @@ import java.net.Socket;
 
 public class ClientGameManager extends Service implements Parcelable {
 
+    private int STARTING_CHIPS = 0;
+
     HostGameManager host;
     String name;
     Context calledContext;
     NsdClient clientObj;
+    Activity calledActivity;
+    int numChips;
+    int hand;
 
-    ClientGameManager(Context context, String name) {
+    ClientGameManager(Context context, String name, Activity calledActivity) {
         this.name = name;
+        this.calledActivity = calledActivity;
         this.calledContext = context;
+        this.numChips = STARTING_CHIPS;
     }
 
 
@@ -34,7 +42,7 @@ public class ClientGameManager extends Service implements Parcelable {
     }
 
     void startClientNsd() {
-        clientObj = new NsdClient(this.calledContext, "Client", this.name);
+        clientObj = new NsdClient(this.calledContext, "Client", this);
     }
 
     public static final Creator<ClientGameManager> CREATOR = new Creator<ClientGameManager>() {

@@ -3,6 +3,7 @@ package com.e.localpoker;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.DataInputStream;
@@ -75,6 +76,7 @@ public class NsdHost {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                hgm.calledActivity.findViewById(R.id.startButton).setVisibility(View.VISIBLE);
             }
 
             @Override

@@ -1,5 +1,6 @@
 package com.e.localpoker;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -29,23 +30,27 @@ public class HostGameManager extends Service implements Parcelable {
     private DeckManager dm;
     private Card[] communityCards;
     private Context calledContext;
+    private String hostName;
+    Activity calledActivity;
     NsdHost hostObj;
 
-    public HostGameManager(DeckManager dm, Context context) {
+    public HostGameManager(DeckManager dm, Context context, String hostname, Activity calledActivity) {
         this.players = new Player[MAX_PLAYERS];
+        this.hostName = hostname;
         this.chipsPot = 0;
         this.gameStage = 0;
         this.numPlayers = 0;
         this.dm = dm;
         this.communityCards = new Card[5];
         this.calledContext = context;
+        this.calledActivity = calledActivity;
     }
 
 
     void startHostNsd() throws IOException {
         hostObj = new NsdHost(this.calledContext, this);
         addPlayer(null);
-        players[0].setPlayerName(HOST_NAME);
+        players[0].setPlayerName(this.hostName);
     }
 
     void startGame() {

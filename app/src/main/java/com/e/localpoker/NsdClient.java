@@ -5,6 +5,7 @@ import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.DataInputStream;
@@ -19,6 +20,7 @@ public class NsdClient {
     private InetAddress hostAddress;
     private int hostPort;
     private String deviceName;
+    ClientGameManager cgm;
     Context calledContext;
     NsdManager nsdManager;
     NsdManager.DiscoveryListener listener;
@@ -56,6 +58,7 @@ public class NsdClient {
                 clientOutput = new DataOutputStream(hostSocket.getOutputStream());
                 clientInput = new DataInputStream(hostSocket.getInputStream());
                 sendName();
+                cgm.calledActivity.findViewById(R.id.startButton).setVisibility(View.VISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -64,10 +67,11 @@ public class NsdClient {
     };
     String serviceName;
 
-    public NsdClient(Context context, final String serviceN, String deviceName) {
+    public NsdClient(Context context, final String serviceN, ClientGameManager cgm) {
         this.calledContext = context;
+        this.cgm = cgm;
         this.serviceName = serviceN;
-        this.deviceName = deviceName;
+        this.deviceName = cgm.name;
         this.listener = new NsdManager.DiscoveryListener() {
             @Override
             public void onStartDiscoveryFailed(String serviceType, int errorCode) {
