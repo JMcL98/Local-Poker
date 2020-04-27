@@ -20,7 +20,7 @@ public class NsdHost {
     ServerSocket serverSocket;
     Socket thisSocket;
     DataOutputStream hostOutput;
-    boolean acceptingPlayers = false;
+    boolean acceptingPlayers;
 
     String serviceName;
     Context calledContext;
@@ -31,6 +31,7 @@ public class NsdHost {
         this.serviceName = "LocalPoker";
         this.calledContext = context;
         this.hgm = hgm;
+        this.acceptingPlayers = true;
         nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
         initialiseListener();
         registerService(HOST_PORT);

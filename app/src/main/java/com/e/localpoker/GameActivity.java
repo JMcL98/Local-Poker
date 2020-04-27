@@ -18,19 +18,24 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        gameThreadHandler = gameThread.getHandler();
-
-        Bundle receivedBundle = getIntent().getExtras();
-        type = receivedBundle.getInt("type");
-        Message gameMessage = Message.obtain(gameThreadHandler);
-        gameMessage.setData(receivedBundle);
-        if (type == 1) {
-            hgm = receivedBundle.getParcelable("manager");
-            gameMessage.what = 1;
-        } else if (type == 2) {
-            cgm = receivedBundle.getParcelable("manager");
-            gameMessage.what = 2;
+        gameThread = new gameThread();
+        gameThread.start();
+        while (true) {
+            if (gameThread.getHandler() != null) {
+                Bundle receivedBundle = getIntent().getExtras();
+                type = receivedBundle.getInt("type");
+                Message gameMessage = Message.obtain(gameThread.getHandler());
+                gameMessage.setData(receivedBundle);
+                if (type == 1) {
+                    hgm = receivedBundle.getParcelable("manager");
+                    gameMessage.what = 1;
+                } else if (type == 2) {
+                    cgm = receivedBundle.getParcelable("manager");
+                    gameMessage.what = 2;
+                }
+                gameMessage.sendToTarget();
+                break;
+            }
         }
-        gameMessage.sendToTarget();
     }
 }

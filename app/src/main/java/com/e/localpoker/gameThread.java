@@ -11,8 +11,8 @@ public class gameThread extends HandlerThread {
     ClientGameManager cgm;
 
     private Handler handler;
-    public gameThread(String name) {
-        super(name);
+    public gameThread() {
+        super("gameThread");
     }
 
     @SuppressLint("HandlerLeak")

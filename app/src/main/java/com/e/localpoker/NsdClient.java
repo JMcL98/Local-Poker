@@ -136,6 +136,5 @@ public class NsdClient {
         clientOutput.writeByte(1);
         clientOutput.writeUTF(deviceName);
         clientOutput.flush();
-        clientOutput.close();
     }
 }

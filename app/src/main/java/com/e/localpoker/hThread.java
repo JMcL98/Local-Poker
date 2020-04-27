@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.widget.Button;
 
@@ -18,10 +19,14 @@ public class hThread extends HandlerThread {
     private Context calledContext;
     HostGameManager hgm;
     ClientGameManager cgm;
+    private Handler uiHandler;
+    private MainActivity mainActivity;
 
-    public hThread(Context context) {
+    public hThread(Context context, Handler uiHandler, MainActivity mainActivity) {
         super("hThread1");
         calledContext = context;
+        this.uiHandler = uiHandler;
+        this.mainActivity = mainActivity;
     }
 
     @SuppressLint("HandlerLeak")
@@ -43,19 +48,18 @@ public class hThread extends HandlerThread {
                         while (i == 1) {
                             for (int j = 1; j < hgm.numPlayers; j++) {
 
-                                if ((hgm.players[j].getPlayerName() == null) && (hgm.players[j].playerInput != null)) {
+                                if ((hgm.tempPlayers[j].getPlayerName() == null) && (hgm.tempPlayers[j].playerInput != null)) {
                                     try {
-                                        msgType = hgm.players[j].playerInput.readByte();
+                                        msgType = hgm.tempPlayers[j].playerInput.readByte();
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
                                     if (msgType == 1) {
                                         try {
-                                            hgm.players[j].setPlayerName(hgm.players[j].playerInput.readUTF());
-                                            hgm.players[j].playerOutput.writeByte(1);
-                                            hgm.players[j].playerOutput.writeUTF("name_received");
-                                            hgm.players[j].playerOutput.flush();
-                                            hgm.players[j].playerOutput.close();
+                                            hgm.tempPlayers[j].setPlayerName(hgm.tempPlayers[j].playerInput.readUTF());
+                                            hgm.tempPlayers[j].playerOutput.writeByte(1);
+                                            hgm.tempPlayers[j].playerOutput.writeUTF("name_received");
+                                            hgm.tempPlayers[j].playerOutput.flush();
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
@@ -64,10 +68,11 @@ public class hThread extends HandlerThread {
 
                                 }
                             }
-                            //if (!hgm.hostObj.acceptingPlayers) {
-                             //   i = 0;
-                            //}
+                            if (!(hgm.hostObj.acceptingPlayers)) {
+                                i = 0;
+                            }
                         }
+                        hgm.startGame();
 
 
                         break;
@@ -86,21 +91,29 @@ public class hThread extends HandlerThread {
                                         e.printStackTrace();
                                     }
                                 }
-                                try {
-                                    msgType = cgm.clientObj.clientInput.readByte();
-                                    if (msgType == 1) {
-                                        if (cgm.clientObj.clientInput.readUTF().equals("name_received")) {
-                                            j = 2;
-                                        } else if (cgm.clientObj.clientInput.readUTF().equals("start_game")) {
-                                            j = 0;
+                                if (cgm.clientObj.clientInput != null) {
+                                    try {
+                                        msgType = cgm.clientObj.clientInput.readByte();
+                                        if (msgType == 1) {
+                                            String testMessage = cgm.clientObj.clientInput.readUTF();
+                                            if (testMessage.equals("name_received")) {
+                                                j = 2;
+                                            } else if (testMessage.equals("start_game")) {
+                                                j = 0;
+                                            }
                                         }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
                                 }
                             }
                         }
-                        //start game
+                        uiHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mainActivity.clientStart();
+                            }
+                        });
 
                         break;
                 }

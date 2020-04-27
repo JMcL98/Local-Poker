@@ -52,10 +52,22 @@ public class HostGameManager extends Service implements Parcelable {
     }
 
     void startGame() {
-        hostObj.acceptingPlayers = false;
         players = new Player[numPlayers];
-        System.arraycopy(tempPlayers, 0, players, 0, numPlayers);
-        initialDeal();
+        for (int i = 0; i < numPlayers; i++) {
+            players[i] = tempPlayers[i];
+        }
+        for (Player player : players) {
+            if (player.playerOutput != null) {
+                try {
+                    player.playerOutput.writeByte(1);
+                    player.playerOutput.writeUTF("start_game");
+                    player.playerOutput.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+       // initialDeal();
     }
 
     void addToPot(int chips) {
@@ -107,7 +119,7 @@ public class HostGameManager extends Service implements Parcelable {
 
     void addPlayer(Socket clientSocket) throws IOException {
         Player newPlayer = new Player(numPlayers, clientSocket);
-        this.players[numPlayers] = newPlayer;
+        this.tempPlayers[numPlayers] = newPlayer;
         this.numPlayers++;
     }
 

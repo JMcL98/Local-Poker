@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -25,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     Player[] players;
     String serviceName = "LocalPoker";
     hThread hthread1;
-    Handler hThread1Handler;
     EditText e1;
     HostGameManager hgm;
     ClientGameManager cgm;
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         e1 = (EditText) findViewById(R.id.editText);
-        hthread1 = new hThread(this);
+        hthread1 = new hThread(this, new Handler(), this);
         hthread1.start();
     }
 
@@ -48,12 +48,11 @@ public class MainActivity extends AppCompatActivity {
             hgm = new HostGameManager(deckManager, this, dName);
             Bundle hostBundle = new Bundle();
             hostBundle.putParcelable("hostmanager", hgm);
-
             Message hostMessage = Message.obtain();
             hostMessage.setData(hostBundle);
             hostMessage.what = 1;
-            hThread1Handler = hthread1.getHandler();
-            hThread1Handler.sendMessage(hostMessage);
+          //  hThread1Handler = hthread1.getHandler();
+            hthread1.getHandler().sendMessage(hostMessage);
             prepGame(1);
         }
     }
@@ -71,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
             Message clientMessage = Message.obtain();
             clientMessage.what = 2;
             clientMessage.setData(clientBundle);
-            hThread1Handler = hthread1.getHandler();
-            hThread1Handler.sendMessage(clientMessage);
+            //hThread1Handler = hthread1.getHandler();
+            hthread1.getHandler().sendMessage(clientMessage);
             prepGame(2);
         }
     }
@@ -117,12 +116,15 @@ public class MainActivity extends AppCompatActivity {
         Bundle hostBundle = new Bundle();
         hostBundle.putParcelable("manager", hgm);
         hostBundle.putInt("type", 1);
+        hgm.hostObj.acceptingPlayers = false;
+        gameLaunch(hostBundle);
     }
 
     public void clientStart() {
         Bundle clientBundle = new Bundle();
         clientBundle.putParcelable("manager", cgm);
         clientBundle.putInt("type", 2);
+        gameLaunch(clientBundle);
     }
 
     private void gameLaunch(Bundle bundle) {
