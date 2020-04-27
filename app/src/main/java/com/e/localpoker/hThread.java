@@ -28,7 +28,6 @@ public class hThread extends HandlerThread {
     @Override
     protected void onLooperPrepared() {
         handler = new Handler() {
-            @SuppressLint("HandlerLeak")
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case (1):
@@ -90,9 +89,9 @@ public class hThread extends HandlerThread {
                                 try {
                                     msgType = cgm.clientObj.clientInput.readByte();
                                     if (msgType == 1) {
-                                        if (cgm.clientObj.clientInput.readUTF() == "name_received") {
+                                        if (cgm.clientObj.clientInput.readUTF().equals("name_received")) {
                                             j = 2;
-                                        } else if (cgm.clientObj.clientInput.readUTF() == "start_game") {
+                                        } else if (cgm.clientObj.clientInput.readUTF().equals("start_game")) {
                                             j = 0;
                                         }
                                     }

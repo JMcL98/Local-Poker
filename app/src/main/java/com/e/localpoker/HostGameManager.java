@@ -21,21 +21,20 @@ import java.util.Arrays;
 public class HostGameManager extends Service implements Parcelable {
 
     private int MAX_PLAYERS = 10;
-    private String HOST_NAME = "Jordan";
 
+    Player[] tempPlayers;
     Player[] players;
     int numPlayers;
     private int chipsPot;
-    private int gameStage;
+    private int gameStage; // 5th stage = show cards
     private DeckManager dm;
     private Card[] communityCards;
     private Context calledContext;
     private String hostName;
-    MainActivity calledActivity;
     NsdHost hostObj;
 
-    public HostGameManager(DeckManager dm, Context context, String hostname, MainActivity calledActivity) {
-        this.players = new Player[MAX_PLAYERS];
+    public HostGameManager(DeckManager dm, Context context, String hostname) {
+        this.tempPlayers = new Player[MAX_PLAYERS];
         this.hostName = hostname;
         this.chipsPot = 0;
         this.gameStage = 0;
@@ -43,23 +42,19 @@ public class HostGameManager extends Service implements Parcelable {
         this.dm = dm;
         this.communityCards = new Card[5];
         this.calledContext = context;
-        this.calledActivity = calledActivity;
     }
 
 
     void startHostNsd() throws IOException {
         hostObj = new NsdHost(this.calledContext, this);
         addPlayer(null);
-        players[0].setPlayerName(this.hostName);
+        tempPlayers[0].setPlayerName(this.hostName);
     }
 
     void startGame() {
         hostObj.acceptingPlayers = false;
-        for (int i = 0; i < players.length; i++) {
-            if (players[i].getPlayerName() == null) {
-                players[i] = null;
-            }
-        }
+        players = new Player[numPlayers];
+        System.arraycopy(tempPlayers, 0, players, 0, numPlayers);
         initialDeal();
     }
 
@@ -123,7 +118,6 @@ public class HostGameManager extends Service implements Parcelable {
 
     protected HostGameManager(Parcel in) {
         MAX_PLAYERS = in.readInt();
-        HOST_NAME = in.readString();
         numPlayers = in.readInt();
         chipsPot = in.readInt();
         gameStage = in.readInt();
@@ -132,7 +126,6 @@ public class HostGameManager extends Service implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(MAX_PLAYERS);
-        dest.writeString(HOST_NAME);
         dest.writeInt(numPlayers);
         dest.writeInt(chipsPot);
         dest.writeInt(gameStage);

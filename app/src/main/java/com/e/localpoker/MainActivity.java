@@ -2,6 +2,7 @@ package com.e.localpoker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -17,6 +18,8 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
+    private int MAIN_TO_GAME_REQUEST_CODE = 1;
+
     DeckManager deckManager;
     Player testPlayer;
     Player[] players;
@@ -24,29 +27,27 @@ public class MainActivity extends AppCompatActivity {
     hThread hthread1;
     Handler hThread1Handler;
     EditText e1;
+    HostGameManager hgm;
+    ClientGameManager cgm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         e1 = (EditText) findViewById(R.id.editText);
-        deckManager = new DeckManager();
         hthread1 = new hThread(this);
         hthread1.start();
     }
 
     public void onHostClick(View v) throws IOException {
-
         String dName = e1.getText().toString();
         if (dName.equals("Name")) {
             Toast toast = Toast.makeText(this, "Please input a name", Toast.LENGTH_SHORT);
             toast.show();
         } else {
-
-
-            HostGameManager hostManager = new HostGameManager(deckManager, this, dName, this);
+            hgm = new HostGameManager(deckManager, this, dName);
             Bundle hostBundle = new Bundle();
-            hostBundle.putParcelable("hostmanager", hostManager);
+            hostBundle.putParcelable("hostmanager", hgm);
 
             Message hostMessage = Message.obtain();
             hostMessage.setData(hostBundle);
@@ -65,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Bundle clientBundle = new Bundle();
             clientBundle.putString("devicename", dName);
-            ClientGameManager clientManager = new ClientGameManager(this, dName);
-            clientBundle.putParcelable("clientmanager", clientManager);
+            cgm = new ClientGameManager(this, dName);
+            clientBundle.putParcelable("clientmanager", cgm);
             Message clientMessage = Message.obtain();
             clientMessage.what = 2;
             clientMessage.setData(clientBundle);
@@ -113,7 +114,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickStart(View v) {
+        Bundle hostBundle = new Bundle();
+        hostBundle.putParcelable("manager", hgm);
+        hostBundle.putInt("type", 1);
+    }
 
+    public void clientStart() {
+        Bundle clientBundle = new Bundle();
+        clientBundle.putParcelable("manager", cgm);
+        clientBundle.putInt("type", 2);
+    }
+
+    private void gameLaunch(Bundle bundle) {
+        Intent gameIntent = new Intent(MainActivity.this, GameActivity.class);
+        gameIntent.putExtras(bundle);
+        startActivityForResult(gameIntent, MAIN_TO_GAME_REQUEST_CODE);
     }
 
     public void prepGame(int type) {
