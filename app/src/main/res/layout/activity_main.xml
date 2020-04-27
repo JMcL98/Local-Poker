@@ -4,81 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="230dp"
-        android:layout_marginEnd="163dp"
-        android:onClick="onHostClick"
-        android:text="Host"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="429dp"
+        android:layout_height="198dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="415dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="161dp"
-        android:layout_marginEnd="162dp"
-        android:layout_marginBottom="235dp"
-        android:onClick="onClientClick"
-        android:text="Client"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="99dp"
-        android:layout_marginTop="135dp"
-        android:layout_marginEnd="99dp"
-        android:layout_marginBottom="50dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/startButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="161dp"
-        android:layout_marginTop="59dp"
-        android:layout_marginEnd="162dp"
-        android:layout_marginBottom="128dp"
-        android:onClick="onClickStart"
-        android:text="Start"
-        android:visibility="invisible"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="180dp"
+        android:clickable="false"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="176dp"
-        android:layout_marginTop="78dp"
-        android:layout_marginEnd="176dp"
-        android:layout_marginBottom="73dp"
-        android:text="Please wait for game to start..."
-        android:textColor="#000000"
-        android:textSize="25sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="299dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onHostClick"
+            android:text="Host" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClientClick"
+            android:text="Client" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please wait for game to start..."
+            android:textColor="#000000"
+            android:textSize="25sp"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/startButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickStart"
+            android:text="Start"
+            android:visibility="invisible" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
