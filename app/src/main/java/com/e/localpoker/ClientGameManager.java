@@ -24,13 +24,11 @@ public class ClientGameManager extends Service implements Parcelable {
     String name;
     Context calledContext;
     NsdClient clientObj;
-    Activity calledActivity;
     int numChips;
     int hand;
 
-    ClientGameManager(Context context, String name, Activity calledActivity) {
+    ClientGameManager(Context context, String name) {
         this.name = name;
-        this.calledActivity = calledActivity;
         this.calledContext = context;
         this.numChips = STARTING_CHIPS;
     }

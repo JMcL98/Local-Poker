@@ -57,8 +57,6 @@ public class NsdClient {
                 hostSocket = new Socket(hostAddress, hostPort);
                 clientOutput = new DataOutputStream(hostSocket.getOutputStream());
                 clientInput = new DataInputStream(hostSocket.getInputStream());
-                sendName();
-                cgm.calledActivity.findViewById(R.id.startButton).setVisibility(View.VISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();
             }

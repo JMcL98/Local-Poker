@@ -31,10 +31,10 @@ public class HostGameManager extends Service implements Parcelable {
     private Card[] communityCards;
     private Context calledContext;
     private String hostName;
-    Activity calledActivity;
+    MainActivity calledActivity;
     NsdHost hostObj;
 
-    public HostGameManager(DeckManager dm, Context context, String hostname, Activity calledActivity) {
+    public HostGameManager(DeckManager dm, Context context, String hostname, MainActivity calledActivity) {
         this.players = new Player[MAX_PLAYERS];
         this.hostName = hostname;
         this.chipsPot = 0;

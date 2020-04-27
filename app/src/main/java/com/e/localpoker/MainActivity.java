@@ -3,12 +3,15 @@ package com.e.localpoker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -19,45 +22,60 @@ public class MainActivity extends AppCompatActivity {
     Player[] players;
     String serviceName = "LocalPoker";
     hThread hthread1;
+    Handler hThread1Handler;
+    EditText e1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        e1 = (EditText) findViewById(R.id.editText);
         deckManager = new DeckManager();
         hthread1 = new hThread(this);
         hthread1.start();
     }
 
     public void onHostClick(View v) throws IOException {
-        Button clientButton = (Button) findViewById(R.id.button2);
-        clientButton.setVisibility(View.INVISIBLE);
-        EditText e1 = (EditText) findViewById(R.id.editText);
-        String dName = e1.getText().toString();
-        HostGameManager hostManager = new HostGameManager(deckManager, this, dName, this);
-        Bundle hostBundle = new Bundle();
-        hostBundle.putParcelable("hostmanager", hostManager);
 
-        Message hostMessage = Message.obtain();
-        hostMessage.setData(hostBundle);
-        hostMessage.what = 1;
-        hthread1.getHandler().sendMessage(hostMessage);
+        String dName = e1.getText().toString();
+        if (dName.equals("Name")) {
+            Toast toast = Toast.makeText(this, "Please input a name", Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+
+
+            HostGameManager hostManager = new HostGameManager(deckManager, this, dName, this);
+            Bundle hostBundle = new Bundle();
+            hostBundle.putParcelable("hostmanager", hostManager);
+
+            Message hostMessage = Message.obtain();
+            hostMessage.setData(hostBundle);
+            hostMessage.what = 1;
+            hThread1Handler = hthread1.getHandler();
+            hThread1Handler.sendMessage(hostMessage);
+            prepGame(1);
+        }
     }
 
     public void onClientClick(View v) {
-        Button hostButton = (Button) findViewById(R.id.button);
-        hostButton.setVisibility(View.INVISIBLE);
-        EditText e1 = (EditText) findViewById(R.id.editText);
         String dName = e1.getText().toString();
-        Bundle clientBundle = new Bundle();
-        clientBundle.putString("devicename", dName);
-        ClientGameManager clientManager = new ClientGameManager(this, dName, this);
-        clientBundle.putParcelable("clientmanager", clientManager);
-        Message clientMessage = Message.obtain();
-        clientMessage.what = 2;
-        clientMessage.setData(clientBundle);
-        hthread1.getHandler().sendMessage(clientMessage);
+        if (dName.equals("Name")) {
+            Toast toast = Toast.makeText(this, "Please input a name", Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            Bundle clientBundle = new Bundle();
+            clientBundle.putString("devicename", dName);
+            ClientGameManager clientManager = new ClientGameManager(this, dName);
+            clientBundle.putParcelable("clientmanager", clientManager);
+            Message clientMessage = Message.obtain();
+            clientMessage.what = 2;
+            clientMessage.setData(clientBundle);
+            hThread1Handler = hthread1.getHandler();
+            hThread1Handler.sendMessage(clientMessage);
+            prepGame(2);
+        }
     }
+
 
     public void dealButton(View v) {
 
@@ -98,10 +116,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void makeStartVisible() {
-        Button startButton = (Button) findViewById(R.id.startButton);
-        startButton.setVisibility(View.VISIBLE);
+    public void prepGame(int type) {
+        if (type == 1) {
+            Button hostButton = (Button) findViewById(R.id.button);
+            Button clientButton = (Button) findViewById(R.id.button2);
+            Button startButton = (Button) findViewById(R.id.startButton);
+            hostButton.setVisibility(View.INVISIBLE);
+            clientButton.setVisibility(View.INVISIBLE);
+            startButton.setVisibility(View.VISIBLE);
+        } else if (type == 2) {
+            Button hostButton = (Button) findViewById(R.id.button);
+            Button clientButton = (Button) findViewById(R.id.button2);
+            TextView pleaseWait = (TextView) findViewById(R.id.textView);
+            hostButton.setVisibility(View.INVISIBLE);
+            clientButton.setVisibility(View.INVISIBLE);
+            pleaseWait.setVisibility(View.VISIBLE);
+        }
     }
+
 
     public void onDestroy() {
         hthread1.quit();

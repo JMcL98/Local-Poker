@@ -42,23 +42,6 @@ public class hThread extends HandlerThread {
                         int i = 1;
                         byte msgType = 0;
                         while (i == 1) {
-                            /*if (hgm.hostObj.hostInput != null) {
-                                try {
-                                    msgType = hgm.hostObj.hostInput.readByte();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                switch (msgType) {
-                                    case (1):
-                                        try {
-                                            for (int j = 0; j < hgm.players.length; j++) {
-                                                if(hgm.players[i].clientSocket == hgm.hostObj.hostInput.)
-                                            }
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                }
-                            }*/
                             for (int j = 1; j < hgm.numPlayers; j++) {
 
                                 if ((hgm.players[j].getPlayerName() == null) && (hgm.players[j].playerInput != null)) {
@@ -70,6 +53,10 @@ public class hThread extends HandlerThread {
                                     if (msgType == 1) {
                                         try {
                                             hgm.players[j].setPlayerName(hgm.players[j].playerInput.readUTF());
+                                            hgm.players[j].playerOutput.writeByte(1);
+                                            hgm.players[j].playerOutput.writeUTF("name_received");
+                                            hgm.players[j].playerOutput.flush();
+                                            hgm.players[j].playerOutput.close();
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
@@ -87,9 +74,34 @@ public class hThread extends HandlerThread {
                         break;
                     case (2):
                         Bundle receivedClientBundle = message.getData();
-                        //NsdClient clientObj = new NsdClient(calledContext, "Client", Objects.requireNonNull(receivedClientBundle.get("devicename")).toString());
                         cgm = (ClientGameManager) receivedClientBundle.get("clientmanager");
                         cgm.startClientNsd();
+                        int j = 1;
+                        byte msgType2 = 0;
+                        while (j > 0) {
+                            if (cgm.clientObj.clientOutput != null) {
+                                if (j == 1) {
+                                    try {
+                                        cgm.clientObj.sendName();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                try {
+                                    msgType = cgm.clientObj.clientInput.readByte();
+                                    if (msgType == 1) {
+                                        if (cgm.clientObj.clientInput.readUTF() == "name_received") {
+                                            j = 2;
+                                        } else if (cgm.clientObj.clientInput.readUTF() == "start_game") {
+                                            j = 0;
+                                        }
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        //start game
 
                         break;
                 }

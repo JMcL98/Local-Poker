@@ -66,8 +66,8 @@ public class NsdHost {
 
             @Override
             public void onServiceRegistered(NsdServiceInfo serviceInfo) {
-                Toast toast = Toast.makeText(calledContext, "Service Registered", Toast.LENGTH_SHORT);
-                toast.show();
+                Toast toast2 = Toast.makeText(calledContext, "Service Registered", Toast.LENGTH_SHORT);
+                toast2.show();
                 serviceName = serviceInfo.getServiceName();
                 try {
                     serverSocket =  new ServerSocket(HOST_PORT);
@@ -76,7 +76,6 @@ public class NsdHost {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                hgm.calledActivity.findViewById(R.id.startButton).setVisibility(View.VISIBLE);
             }
 
             @Override
