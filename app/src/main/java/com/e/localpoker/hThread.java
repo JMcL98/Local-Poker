@@ -8,6 +8,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -56,7 +57,14 @@ public class hThread extends HandlerThread {
                                     }
                                     if (msgType == 1) {
                                         try {
-                                            hgm.tempPlayers[j].setPlayerName(hgm.tempPlayers[j].playerInput.readUTF());
+                                            final String newName = hgm.tempPlayers[j].playerInput.readUTF();
+                                            uiHandler.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    mainActivity.acceptedPlayer(newName);
+                                                }
+                                            });
+                                            hgm.tempPlayers[j].setPlayerName(newName);
                                             hgm.tempPlayers[j].playerOutput.writeByte(1);
                                             hgm.tempPlayers[j].playerOutput.writeUTF("name_received");
                                             hgm.tempPlayers[j].playerOutput.flush();

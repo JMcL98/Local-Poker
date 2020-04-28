@@ -3,6 +3,7 @@ package com.e.localpoker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,18 +32,25 @@ public class MainActivity extends AppCompatActivity {
     EditText e1;
     HostGameManager hgm;
     ClientGameManager cgm;
+    LinearLayout playerList;
+    LinearLayout playerList2;
+    int numberOfPlayersDisplayed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        numberOfPlayersDisplayed = 0;
         e1 = (EditText) findViewById(R.id.editText);
+        playerList = (LinearLayout) findViewById(R.id.listOfPlayers);
+        playerList2 = (LinearLayout) findViewById(R.id.listOfPlayers2);
         hthread1 = new hThread(this, new Handler(), this);
         hthread1.start();
     }
 
     public void onHostClick(View v) throws IOException {
         String dName = e1.getText().toString();
+        acceptedPlayer(dName);
         if (dName.equals("Name")) {
             Toast toast = Toast.makeText(this, "Please input a name", Toast.LENGTH_SHORT);
             toast.show();
@@ -141,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
             hostButton.setVisibility(View.INVISIBLE);
             clientButton.setVisibility(View.INVISIBLE);
             startButton.setVisibility(View.VISIBLE);
+
         } else if (type == 2) {
             Button hostButton = (Button) findViewById(R.id.button);
             Button clientButton = (Button) findViewById(R.id.button2);
@@ -149,6 +160,19 @@ public class MainActivity extends AppCompatActivity {
             clientButton.setVisibility(View.INVISIBLE);
             pleaseWait.setVisibility(View.VISIBLE);
         }
+    }
+
+    void acceptedPlayer(String name) {
+        TextView tv = new TextView(this);
+        tv.setText(name);
+        tv.setTextSize(20);
+        tv.setTextColor(Color.BLACK);
+        if (numberOfPlayersDisplayed < 5) {
+            playerList.addView(tv);
+        } else {
+            playerList2.addView(tv);
+        }
+        numberOfPlayersDisplayed++;
     }
 
 
