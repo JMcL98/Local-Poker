@@ -136,6 +136,9 @@ public class HostGameManager extends Service implements Parcelable {
             if (player.getPlayerID() == winningPlayerID) {
                 player.addChips(takePot());
             }
+            if (player.getChips() < 1) {
+                eliminatePlayer(player.getPlayerID());
+            }
         }
         resetRound();
     }
