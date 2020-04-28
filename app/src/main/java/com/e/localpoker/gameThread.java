@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.util.Log;
 import android.widget.TextView;
 
 public class gameThread extends HandlerThread {
@@ -29,23 +30,64 @@ public class gameThread extends HandlerThread {
                     case (1) :
                         Bundle receivedHostBundle = message.getData();
                         hgm = receivedHostBundle.getParcelable("manager");
-                        uiHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                ((TextView) activity.findViewById(R.id.textView2)).setText("You are host");
+                        int i = 1;
+                        while (i > 0) {
+                            hgm.initialDeal();
+                            while (i == 1) {
+                                // first round
+                                // if all players have called
+                                i++;
+                                hgm.advanceStage();
                             }
-                        });
-                        break;
+                            while (i == 2) {
+                                // second round
+                                // if all players have called
+                                i++;
+                                hgm.advanceStage();
+                            }
+                            while (i == 3) {
+                                // third round
+                                // if all players have called
+                                i++;
+                                hgm.advanceStage();
+                            }
+                            while (i == 4) {
+                                // final round
+                                // if all players called
+                                i++;
+                                hgm.advanceStage();
+                            }
 
+
+
+
+                            for (Player player : hgm.players) {
+                                if (player.getChips() < 1) {
+                                    hgm.eliminatePlayer(player.getPlayerID());
+                                }
+                            }
+                            if (hgm.playersLeft == 1) {
+                                i = 0;
+                            } else {
+                                hgm.resetRound();
+                                i = 1;
+                            }
+
+                        }
+
+                        for (Player player : hgm.players) {
+                            if (!player.eliminated) {
+                                Log.d("Jordan", "Game Finished");
+                                Log.d("Jordan", "Winning player: " + player.getPlayerName());
+                            }
+                        }
+
+
+                        break;
                     case (2) :
                         Bundle receivedClientBundle = message.getData();
                         cgm = receivedClientBundle.getParcelable("manager");
-                        uiHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                ((TextView) activity.findViewById(R.id.textView2)).setText("You are client");
-                            }
-                        });
+
                 }
 
             }

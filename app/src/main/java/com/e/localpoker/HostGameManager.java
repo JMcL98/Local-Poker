@@ -21,12 +21,16 @@ import java.util.Arrays;
 public class HostGameManager extends Service implements Parcelable {
 
     private int MAX_PLAYERS = 10;
+    private int STARTING_CHIPS = 1000;
 
     Player[] tempPlayers;
     Player[] players;
     int numPlayers;
+    int playersLeft;
     private int chipsPot;
     private int gameStage; // 5th stage = show cards
+    int smallBlind;
+    int bigBlind;
     private DeckManager dm;
     private Card[] communityCards;
     private Context calledContext;
@@ -39,6 +43,8 @@ public class HostGameManager extends Service implements Parcelable {
         this.chipsPot = 0;
         this.gameStage = 0;
         this.numPlayers = 0;
+        this.smallBlind = 10;
+        this.bigBlind = 20;
         this.dm = dm;
         this.communityCards = new Card[5];
         this.calledContext = context;
@@ -52,6 +58,7 @@ public class HostGameManager extends Service implements Parcelable {
     }
 
     void startGame() {
+        playersLeft = numPlayers;
         players = new Player[numPlayers];
         for (int i = 0; i < numPlayers; i++) {
             players[i] = tempPlayers[i];
@@ -66,8 +73,19 @@ public class HostGameManager extends Service implements Parcelable {
                     e.printStackTrace();
                 }
             }
+            player.addChips(STARTING_CHIPS);
         }
-       // initialDeal();
+    }
+
+    void eliminatePlayer(int ID) {
+        for (Player player : players) {
+            if (player.getPlayerID() == ID) {
+                player.eliminated = true;
+            }
+        }
+        playersLeft--;
+        smallBlind = smallBlind * 2;
+        bigBlind = bigBlind * 2;
     }
 
     void addToPot(int chips) {
@@ -75,10 +93,36 @@ public class HostGameManager extends Service implements Parcelable {
     }
 
     void advanceStage() {
+        for (Player player : players) {
+            addToPot(player.chipsInPlay);
+            player.chipsInPlay = 0;
+        }
         gameStage++;
+        switch (gameStage) {
+            case (1) :
+                dealCommunityCard(0);
+                dealCommunityCard(1);
+                dealCommunityCard(2);
+            case (2) :
+                dealCommunityCard(3);
+            case (3) :
+                dealCommunityCard(4);
+            case (4) :
+                int handStrength = 0;
+                int roundWinner = 0;
+                for (Player player : players) {
+                    if (!player.eliminated) {
+                        int newStrength = HandStrength.calculateStrength(player.getHand());
+                        if (newStrength > handStrength) {
+                            roundWinner = player.getPlayerID();
+                        }
+                    }
+                }
+                finishRound(roundWinner);
+        }
     }
 
-    void resetRounds() {
+    void resetRound() {
         for (Player player : players) {
             player.resetHand();
         }
@@ -90,11 +134,10 @@ public class HostGameManager extends Service implements Parcelable {
     void finishRound(int winningPlayerID) {
         for (Player player : players) {
             if (player.getPlayerID() == winningPlayerID) {
-                player.addChips(this.chipsPot);
+                player.addChips(takePot());
             }
         }
-        chipsPot = 0;
-        resetRounds();
+        resetRound();
     }
 
     int takePot() {
@@ -105,15 +148,19 @@ public class HostGameManager extends Service implements Parcelable {
 
     void initialDeal() {
         for (Player player : players) {
-            player.addCard(dm.dealCard(60));
-            player.addCard(dm.dealCard(60));
+            if (!player.eliminated) {
+                player.addCard(dm.dealCard(60));
+                player.addCard(dm.dealCard(60));
+            }
         }
     }
 
     void dealCommunityCard(int index) {
         communityCards[index] = dm.dealCard(60);
         for (Player player : players) {
-            player.addCard(communityCards[index]);
+            if (!player.eliminated) {
+                player.addCard(communityCards[index]);
+            }
         }
     }
 

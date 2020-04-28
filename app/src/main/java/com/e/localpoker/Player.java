@@ -12,8 +12,10 @@ class Player {
     private final int playerID;
     private String playerName;
     private int chips;
+    int chipsInPlay;
     private Card[] hand;
     private int numCardsInHand;
+    boolean eliminated;
     Socket clientSocket;
     DataOutputStream playerOutput;
     DataInputStream playerInput;
@@ -30,7 +32,9 @@ class Player {
             this.playerInput = null;
         }
         chips = 0;
+        chipsInPlay = 0;
         numCardsInHand = 0;
+        eliminated = false;
         hand = new Card[7];
         resetHand();
     }
@@ -42,6 +46,10 @@ class Player {
 
     void addChips(int numChips) {
         this.chips += numChips;
+    }
+
+    int getChips() {
+        return this.chips;
     }
 
     void addCard(Card newCard) {
