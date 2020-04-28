@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClickStart(View v) {
         Bundle hostBundle = new Bundle();
         hostBundle.putParcelable("manager", hgm);
-        hostBundle.putInt("type", 1);
+        hostBundle.putBoolean("type", true);
         hgm.hostObj.acceptingPlayers = false;
         gameLaunch(hostBundle);
     }
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     public void clientStart() {
         Bundle clientBundle = new Bundle();
         clientBundle.putParcelable("manager", cgm);
-        clientBundle.putInt("type", 2);
+        clientBundle.putBoolean("type", false);
         gameLaunch(clientBundle);
     }
 

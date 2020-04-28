@@ -5,31 +5,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity {
 
     HostGameManager hgm;
     ClientGameManager cgm;
-    int type; // 1 = host, 2 = client
+    boolean host; // true = host, false = client
     gameThread gameThread;
-    Handler gameThreadHandler;
+    TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        gameThread = new gameThread();
+        gameThread = new gameThread(this, new Handler());
         gameThread.start();
         while (true) {
             if (gameThread.getHandler() != null) {
                 Bundle receivedBundle = getIntent().getExtras();
-                type = receivedBundle.getInt("type");
+                host = receivedBundle.getBoolean("type");
                 Message gameMessage = Message.obtain(gameThread.getHandler());
                 gameMessage.setData(receivedBundle);
-                if (type == 1) {
+                if (host) {
                     hgm = receivedBundle.getParcelable("manager");
                     gameMessage.what = 1;
-                } else if (type == 2) {
+                } else {
                     cgm = receivedBundle.getParcelable("manager");
                     gameMessage.what = 2;
                 }
@@ -37,5 +38,6 @@ public class GameActivity extends AppCompatActivity {
                 break;
             }
         }
+        tv = (TextView) findViewById(R.id.textView);
     }
 }
