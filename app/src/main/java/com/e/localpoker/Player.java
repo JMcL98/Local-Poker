@@ -44,6 +44,30 @@ class Player {
         Log.d("Jordan", "New player added: " + getPlayerName());
     }
 
+    String requestMove(int callAmount) {
+        if (playerID > 0) {
+            try {
+                playerOutput.writeByte(3);
+                playerOutput.writeUTF(callAmount + "");
+                playerOutput.flush();
+                while (true) {
+                    if (playerInput != null) {
+                        if (playerInput.readByte() == 3) {
+                            return playerInput.readUTF();
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+        }
+        return null;
+    }
+
+
+
     void addChips(int numChips) {
         this.chips += numChips;
     }
@@ -52,9 +76,21 @@ class Player {
         return this.chips;
     }
 
+    void addChipsInPlay(int numChips) {
+        addChips(-(numChips));
+        chipsInPlay += numChips;
+    }
+
     void addCard(Card newCard) {
         if (numCardsInHand < 7) {
             hand[numCardsInHand] = newCard;
+            try {
+                playerOutput.writeByte(4);
+                playerOutput.writeUTF(newCard.getIndex()  + "");
+                playerOutput.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             numCardsInHand++;
         }
     }

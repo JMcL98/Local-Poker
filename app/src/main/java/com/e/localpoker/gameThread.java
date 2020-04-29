@@ -8,6 +8,8 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 public class gameThread extends HandlerThread {
     HostGameManager hgm;
     ClientGameManager cgm;
@@ -32,6 +34,8 @@ public class gameThread extends HandlerThread {
                         hgm = receivedHostBundle.getParcelable("manager");
                         int i = 1;
                         while (i > 0) {
+                            assert hgm != null;
+                            hgm.blinds();
                             hgm.initialDeal();
                             while (i == 1) {
                                 // first round
@@ -87,11 +91,29 @@ public class gameThread extends HandlerThread {
                     case (2) :
                         Bundle receivedClientBundle = message.getData();
                         cgm = receivedClientBundle.getParcelable("manager");
+                        int j = 1;
+                        while (j > 0) {
+                            assert cgm != null;
+                            if (cgm.clientObj.clientInput != null) {
+                                try {
+                                    byte msgType = cgm.clientObj.clientInput.readByte();
+                                    switch (msgType) {
+                                        case (3) :
+
+                                        case (4) :
+                                            cgm.addCard(Integer.parseInt(cgm.clientObj.clientInput.readUTF()));
+                                        case (5) :
+                                            
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
 
                 }
 
             }
-
         };
     }
 

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity {
@@ -14,11 +15,15 @@ public class GameActivity extends AppCompatActivity {
     boolean host; // true = host, false = client
     gameThread gameThread;
     TextView tv;
+    Button callButton, raiseButton, foldButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        callButton = (Button) findViewById(R.id.callButton);
+        raiseButton = (Button) findViewById(R.id.raiseButton);
+        foldButton = (Button) findViewById(R.id.foldButton);
         gameThread = new gameThread(this, new Handler());
         gameThread.start();
         while (true) {
@@ -32,6 +37,7 @@ public class GameActivity extends AppCompatActivity {
                     gameMessage.what = 1;
                 } else {
                     cgm = receivedBundle.getParcelable("manager");
+                    cgm.setGameActivity(this);
                     gameMessage.what = 2;
                 }
                 gameMessage.sendToTarget();

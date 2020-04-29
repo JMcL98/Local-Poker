@@ -37,6 +37,8 @@ public class HostGameManager extends Service implements Parcelable {
     private String hostName;
     NsdHost hostObj;
 
+    int dealerIndex;
+
     public HostGameManager(DeckManager dm, Context context, String hostname) {
         this.tempPlayers = new Player[MAX_PLAYERS];
         this.hostName = hostname;
@@ -48,6 +50,7 @@ public class HostGameManager extends Service implements Parcelable {
         this.dm = dm;
         this.communityCards = new Card[5];
         this.calledContext = context;
+        this.dealerIndex = 0;
     }
 
 
@@ -140,7 +143,24 @@ public class HostGameManager extends Service implements Parcelable {
                 eliminatePlayer(player.getPlayerID());
             }
         }
+        dealerIndex++;
+        if (dealerIndex >= numPlayers) {
+            dealerIndex = 0;
+        }
+        boolean indexFound = false;
+        while (!indexFound) {
+            if (players[dealerIndex].eliminated) {
+                dealerIndex++;
+            } else {
+                indexFound = true;
+            }
+        }
         resetRound();
+    }
+
+    void blinds() {
+        players[dealerIndex + 1].addChipsInPlay(smallBlind);
+        players[dealerIndex + 2].addChipsInPlay(bigBlind);
     }
 
     int takePot() {

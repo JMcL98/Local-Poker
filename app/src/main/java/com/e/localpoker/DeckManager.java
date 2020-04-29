@@ -70,4 +70,8 @@ class DeckManager {
         }
         return new Card('j', 0, 53);
     }
+
+    Card dealSpecificCard(int index) {
+        return deck[index];
+    }
 }

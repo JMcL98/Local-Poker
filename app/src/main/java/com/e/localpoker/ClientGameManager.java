@@ -11,26 +11,48 @@ import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
 public class ClientGameManager extends Service implements Parcelable {
 
-    private int STARTING_CHIPS = 0;
+    private int STARTING_CHIPS = 1000;
 
     HostGameManager host;
     String name;
     Context calledContext;
     NsdClient clientObj;
-    int numChips;
-    int hand;
+    Player myPlayer;
+    GameActivity gameActivity;
+    DeckManager dm;
 
     ClientGameManager(Context context, String name) {
         this.name = name;
         this.calledContext = context;
-        this.numChips = STARTING_CHIPS;
+        this.dm = new DeckManager();
+        try {
+            myPlayer = new Player(0, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    String reply(String message) {
+
+
+        return null;
+    }
+
+    void addCard(int index) {
+        myPlayer.addCard(dm.dealSpecificCard(index));
+    }
+
+    void setGameActivity(GameActivity gameActivity) {
+        this.gameActivity = gameActivity;
     }
 
 
