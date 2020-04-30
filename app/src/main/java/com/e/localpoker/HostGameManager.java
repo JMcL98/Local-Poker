@@ -86,10 +86,14 @@ public class HostGameManager extends Service implements Parcelable {
     }
 
     void eliminatePlayer(int ID) {
-        for (Player player : players) {
-            if (player.getPlayerID() == ID) {
-                player.eliminated = true;
+        int i = 0;
+        while (true) {
+            if (players[i].getPlayerID() == ID) {
+                players[i].eliminated = true;
+                updateClientPlayerInfo(i, "e");
+                break;
             }
+            i++;
         }
         playersLeft--;
         smallBlind = smallBlind * 2;
@@ -100,20 +104,22 @@ public class HostGameManager extends Service implements Parcelable {
         this.chipsPot += chips;
     }
 
-    void receiveCommand(String reply, int playerID) {
+    void receiveCommand(String reply, int playerIndex) {
         switch (reply) {
             case "call":
-                players[playerID].addChipsInPlay(callAmount - players[playerID].chipsInPlay);
+                players[playerIndex].addChipsInPlay(callAmount - players[playerIndex].chipsInPlay);
                 playersCalled++;
-                updateClientPlayerInfo();
+                updateClientPlayerInfo(playerIndex, "c");
                 break;
             case "raise":
-                players[playerID].addChipsInPlay((callAmount * 2) - players[playerID].chipsInPlay); // double current call
+                players[playerIndex].addChipsInPlay((callAmount * 2) - players[playerIndex].chipsInPlay); // double current call
                 playersCalled = 1;
+                updateClientPlayerInfo(playerIndex, "r" + (callAmount * 2));
                 break;
             case "fold":
-                players[playerID].fold();
+                players[playerIndex].fold();
                 playersInPlay--;
+                updateClientPlayerInfo(playerIndex, "f");
                 break;
         }
     }

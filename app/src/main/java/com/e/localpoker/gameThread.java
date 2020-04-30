@@ -121,6 +121,7 @@ public class gameThread extends HandlerThread {
                                         case (9) :
                                             String playersMessage = cgm.clientObj.clientInput.readUTF();
                                             myIndex = Integer.parseInt(playersMessage.substring(0, 0));
+                                            activity.setMyIndex(myIndex);
                                             String numPlayersS = playersMessage.substring(1);
                                             int numPlayers = Integer.parseInt(numPlayersS);
                                             cgm.initialisePlayers(numPlayers, myIndex);
@@ -209,21 +210,40 @@ public class gameThread extends HandlerThread {
 
     private void updatePlayerInfo(int index, String message, boolean host) {
         char type = message.charAt(0);
-        switch (type) {
-            case ('c') :
-                cgm.players[index].chipsInPlay = (cgm.callAmount - cgm.players[index].chipsInPlay);
-                break;
-            case ('r') :
-                int raiseAmount = Integer.parseInt(message.substring(1));
-                cgm.players[index].chipsInPlay = (raiseAmount);
-                cgm.callAmount = raiseAmount;
-                break;
-            case ('f') :
-                cgm.players[index].fold();
-                break;
-            case ('e') :
-                cgm.players[index].eliminated = true;
-                break;
+        if (!host) {
+            switch (type) {
+                case ('c'):
+                    cgm.players[index].chipsInPlay = (cgm.callAmount - cgm.players[index].chipsInPlay);
+                    break;
+                case ('r'):
+                    int raiseAmount = Integer.parseInt(message.substring(1));
+                    cgm.players[index].chipsInPlay = (raiseAmount);
+                    cgm.callAmount = raiseAmount;
+                    break;
+                case ('f'):
+                    cgm.players[index].fold();
+                    break;
+                case ('e'):
+                    cgm.players[index].eliminated = true;
+                    break;
+            }
+        } else {
+            switch (type) {
+                case ('c'):
+                    hgm.players[index].chipsInPlay = (hgm.callAmount - hgm.players[index].chipsInPlay);
+                    break;
+                case ('r'):
+                    int raiseAmount = Integer.parseInt(message.substring(1));
+                    hgm.players[index].chipsInPlay = (raiseAmount);
+                    hgm.callAmount = raiseAmount;
+                    break;
+                case ('f'):
+                    hgm.players[index].fold();
+                    break;
+                case ('e'):
+                    hgm.players[index].eliminated = true;
+                    break;
+            }
         }
         activity.updateInfo(index, host);
     }

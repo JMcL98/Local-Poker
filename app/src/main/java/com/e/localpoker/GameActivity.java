@@ -14,6 +14,7 @@ public class GameActivity extends AppCompatActivity {
     HostGameManager hgm;
     ClientGameManager cgm;
     boolean host; // true = host, false = client
+    int myIndex;
     gameThread gameThread;
     TextView tv;
     Button callButton, raiseButton, foldButton;
@@ -26,6 +27,7 @@ public class GameActivity extends AppCompatActivity {
         callButton = (Button) findViewById(R.id.callButton);
         raiseButton = (Button) findViewById(R.id.raiseButton);
         foldButton = (Button) findViewById(R.id.foldButton);
+        tv = (TextView) findViewById(R.id.textView);
         bufferedAction = "";
         gameThread = new gameThread(this, new Handler());
         gameThread.start();
@@ -38,6 +40,7 @@ public class GameActivity extends AppCompatActivity {
                 if (host) {
                     hgm = receivedBundle.getParcelable("manager");
                     gameMessage.what = 1;
+                    setMyIndex(0);
                 } else {
                     cgm = receivedBundle.getParcelable("manager");
                     cgm.setGameActivity(this);
@@ -47,7 +50,10 @@ public class GameActivity extends AppCompatActivity {
                 break;
             }
         }
-        tv = (TextView) findViewById(R.id.textView);
+    }
+
+    void setMyIndex(int i) {
+        this.myIndex = i;
     }
 
     public void onCall(View v) {
@@ -78,8 +84,12 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    void updateInfo(int myIndex, boolean host) { // so it knows which manager to take information from
-
+    void updateInfo(boolean host) { // so it knows which manager to take information from
+        if (host) {
+            // get from hostManager
+        } else {
+            // get from clientManager
+        }
     }
 
     @Override
