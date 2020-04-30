@@ -32,67 +32,13 @@ public class gameThread extends HandlerThread {
                     case (1) :
                         Bundle receivedHostBundle = message.getData();
                         hgm = receivedHostBundle.getParcelable("manager");
+                        assert hgm != null;
                         hgm.players[0].setGameActivity(activity);
                         int i = 1;
                         while (i > 0) {
-                            assert hgm != null;
                             int startingPlayer = hgm.blinds();
                             hgm.initialDeal();
                             int j = startingPlayer;
-                            /*while (i == 1) {
-                                if (j < hgm.numPlayers) {
-                                    hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
-                                    j++;
-                                } else {
-                                    j = 0;
-                                }
-
-                                if (hgm.playersInPlay == hgm.playersCalled) {
-                                    i++;
-                                    hgm.advanceStage();
-                                }
-                            }
-                            j = startingPlayer;
-                            while (i == 2) {
-                                if (j < hgm.numPlayers) {
-                                    hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
-                                    j++;
-                                } else {
-                                    j = 0;
-                                }
-
-                                if (hgm.playersInPlay == hgm.playersCalled) {
-                                    i++;
-                                    hgm.advanceStage();
-                                }
-                            }
-                            j = startingPlayer;
-                            while (i == 3) {
-                                if (j < hgm.numPlayers) {
-                                    hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
-                                    j++;
-                                } else {
-                                    j = 0;
-                                }
-
-                                if (hgm.playersInPlay == hgm.playersCalled) {
-                                    i++;
-                                    hgm.advanceStage();
-                                }
-                            }
-                            while (i == 4) {
-                                if (j < hgm.numPlayers) {
-                                    hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
-                                    j++;
-                                } else {
-                                    j = 0;
-                                }
-
-                                if (hgm.playersInPlay == hgm.playersCalled) {
-                                    i++;
-                                    hgm.advanceStage();
-                                }
-                            }*/
                             while (i < 5) {
                                 if (j < hgm.numPlayers) {
                                     hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
@@ -107,15 +53,9 @@ public class gameThread extends HandlerThread {
                                     j = startingPlayer;
                                 }
                             }
-                            for (Player player : hgm.players) {
-                                if (player.getChips() < 1) {
-                                    hgm.eliminatePlayer(player.getPlayerID());
-                                }
-                            }
                             if (hgm.playersLeft == 1) {
                                 i = 0;
                             } else {
-                                hgm.resetRound();
                                 i = 1;
                             }
 

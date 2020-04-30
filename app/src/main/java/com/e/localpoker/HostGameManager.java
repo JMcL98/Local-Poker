@@ -46,7 +46,7 @@ public class HostGameManager extends Service implements Parcelable {
         this.tempPlayers = new Player[MAX_PLAYERS];
         this.hostName = hostname;
         this.chipsPot = 0;
-        this.gameStage = 0;
+        this.gameStage = 1;
         this.numPlayers = 0;
         this.smallBlind = 10;
         this.playersCalled = 0;
@@ -124,19 +124,17 @@ public class HostGameManager extends Service implements Parcelable {
             player.chipsInPlay = 0;
         }
         gameStage++;
+        callAmount = 0;
         switch (gameStage) {
-            case (1) :
+            case (2) :
                 dealCommunityCard(0);
                 dealCommunityCard(1);
                 dealCommunityCard(2);
-                callAmount = 0;
-            case (2) :
-                dealCommunityCard(3);
-                callAmount = 0;
             case (3) :
-                dealCommunityCard(4);
-                callAmount = 0;
+                dealCommunityCard(3);
             case (4) :
+                dealCommunityCard(4);
+            case (5) :
                 int handStrength = 0;
                 int roundWinner = 0;
                 for (Player player : players) {
@@ -149,18 +147,6 @@ public class HostGameManager extends Service implements Parcelable {
                 }
                 finishRound(roundWinner);
         }
-    }
-
-    void resetRound() {
-        for (Player player : players) {
-            player.resetHand();
-            player.unFold();
-        }
-        Arrays.fill(communityCards, null);
-        dm.resetDeck();
-        playersInPlay = numPlayers;
-        this.callAmount = bigBlind;
-        gameStage = 0;
     }
 
     void finishRound(int winningPlayerID) {
@@ -186,6 +172,18 @@ public class HostGameManager extends Service implements Parcelable {
 
         }
         resetRound();
+    }
+
+    void resetRound() {
+        for (Player player : players) {
+            player.resetHand();
+            player.unFold();
+        }
+        Arrays.fill(communityCards, null);
+        dm.resetDeck();
+        playersInPlay = numPlayers;
+        this.callAmount = bigBlind;
+        gameStage = 1;
     }
 
     int blinds() {
