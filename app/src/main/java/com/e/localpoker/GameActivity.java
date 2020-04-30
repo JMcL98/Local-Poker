@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ public class GameActivity extends AppCompatActivity {
     gameThread gameThread;
     TextView tv;
     Button callButton, raiseButton, foldButton;
+    private String bufferedAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,5 +47,23 @@ public class GameActivity extends AppCompatActivity {
             }
         }
         tv = (TextView) findViewById(R.id.textView);
+    }
+
+    public void onCall(View v) {
+        bufferedAction = "call";
+    }
+
+    public void onRaise(View v) {
+        bufferedAction = "raise";
+    }
+
+    public void onFold(View v) {
+        bufferedAction = "fold";
+    }
+
+    String getBufferedAction() {
+        String temp = bufferedAction;
+        bufferedAction = "";
+        return temp;
     }
 }

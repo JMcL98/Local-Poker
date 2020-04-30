@@ -143,24 +143,57 @@ public class HostGameManager extends Service implements Parcelable {
                 eliminatePlayer(player.getPlayerID());
             }
         }
-        dealerIndex++;
-        if (dealerIndex >= numPlayers) {
-            dealerIndex = 0;
-        }
-        boolean indexFound = false;
-        while (!indexFound) {
+        boolean dealerFound = false;
+        while (!dealerFound) {
+            dealerIndex++;
+            if (dealerIndex >= numPlayers) {
+                dealerIndex = 0;
+            }
             if (players[dealerIndex].eliminated) {
                 dealerIndex++;
             } else {
-                indexFound = true;
+                dealerFound = true;
             }
+
         }
         resetRound();
     }
 
-    void blinds() {
-        players[dealerIndex + 1].addChipsInPlay(smallBlind);
-        players[dealerIndex + 2].addChipsInPlay(bigBlind);
+    int blinds() {
+        if (playersLeft == 2) {
+            for (int i = 0; i < players.length; i++) {
+                if (!players[i].eliminated) {
+                    if (i == dealerIndex) {
+                        players[i].addChipsInPlay(bigBlind);
+                    } else {
+                        players[i].addChipsInPlay(smallBlind);
+                    }
+                }
+            }
+        } else {
+            int blindsFound = 0;
+            int i = 1;
+            while (true) {
+                if (players[dealerIndex + i].eliminated) {
+                    i++;
+                } else {
+                    if (blindsFound == 0) {
+                        players[dealerIndex + i].addChipsInPlay(smallBlind);
+                    } else if (blindsFound == 1) {
+                        players[dealerIndex + i].addChipsInPlay(bigBlind);
+                    } else if (blindsFound == 2) {
+                        return dealerIndex + i;
+                    }
+                    blindsFound++;
+                    i++;
+                }
+                if ((dealerIndex + i) == numPlayers) {
+                    i = 0 - dealerIndex;
+                }
+            }
+
+        }
+        return 0;
     }
 
     int takePot() {

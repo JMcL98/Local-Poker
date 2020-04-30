@@ -41,10 +41,14 @@ public class ClientGameManager extends Service implements Parcelable {
         }
     }
 
-    String reply(String message) {
-
-
-        return null;
+    void reply(String action) {
+        try {
+            clientObj.clientOutput.writeByte(4);
+            clientObj.clientOutput.writeUTF(action);
+            clientObj.clientOutput.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     void addCard(int index) {

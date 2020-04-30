@@ -35,9 +35,10 @@ public class gameThread extends HandlerThread {
                         int i = 1;
                         while (i > 0) {
                             assert hgm != null;
-                            hgm.blinds();
+                            int startingPlayer = hgm.blinds();
                             hgm.initialDeal();
                             while (i == 1) {
+                                
                                 // first round
                                 // if all players have called
                                 i++;
@@ -99,11 +100,11 @@ public class gameThread extends HandlerThread {
                                     byte msgType = cgm.clientObj.clientInput.readByte();
                                     switch (msgType) {
                                         case (3) :
-
+                                            cgm.reply(activity.getBufferedAction());
                                         case (4) :
                                             cgm.addCard(Integer.parseInt(cgm.clientObj.clientInput.readUTF()));
                                         case (5) :
-                                            
+                                            cgm.myPlayer.resetHand();
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
