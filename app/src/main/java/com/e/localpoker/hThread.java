@@ -39,6 +39,7 @@ public class hThread extends HandlerThread {
                     case (1):
                         Bundle bundle = message.getData();
                         hgm = (HostGameManager) bundle.get("hostmanager");
+                        assert hgm != null;
                         try {
                             hgm.startHostNsd();
                         } catch (IOException e) {
@@ -87,9 +88,10 @@ public class hThread extends HandlerThread {
                     case (2):
                         Bundle receivedClientBundle = message.getData();
                         cgm = (ClientGameManager) receivedClientBundle.get("clientmanager");
+                        assert cgm != null;
                         cgm.startClientNsd();
                         int j = 1;
-                        byte msgType2 = 0;
+                        byte msgType2;
                         while (j > 0) {
                             if (cgm.clientObj.clientOutput != null) {
                                 if (j == 1) {
@@ -101,8 +103,8 @@ public class hThread extends HandlerThread {
                                 }
                                 if (cgm.clientObj.clientInput != null) {
                                     try {
-                                        msgType = cgm.clientObj.clientInput.readByte();
-                                        if (msgType == 1) {
+                                        msgType2 = cgm.clientObj.clientInput.readByte();
+                                        if (msgType2 == 1) {
                                             String testMessage = cgm.clientObj.clientInput.readUTF();
                                             if (testMessage.equals("name_received")) {
                                                 j = 2;

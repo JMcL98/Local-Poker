@@ -98,12 +98,14 @@ class Player {
     void addCard(Card newCard) {
         if (numCardsInHand < 7) {
             hand[numCardsInHand] = newCard;
-            try {
-                playerOutput.writeByte(4);
-                playerOutput.writeUTF(newCard.getIndex()  + "");
-                playerOutput.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (playerOutput != null) {
+                try {
+                    playerOutput.writeByte(4);
+                    playerOutput.writeUTF(newCard.getIndex() + "");
+                    playerOutput.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             numCardsInHand++;
         }

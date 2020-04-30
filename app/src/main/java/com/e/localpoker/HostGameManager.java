@@ -142,6 +142,7 @@ public class HostGameManager extends Service implements Parcelable {
                         int newStrength = HandStrength.calculateStrength(player.getHand());
                         if (newStrength > handStrength) {
                             roundWinner = player.getPlayerID();
+                            handStrength = newStrength;
                         }
                     }
                 }
@@ -209,7 +210,7 @@ public class HostGameManager extends Service implements Parcelable {
                     } else if (blindsFound == 1) {
                         players[dealerIndex + i].addChipsInPlay(bigBlind);
                     } else if (blindsFound == 2) {
-                        return dealerIndex + i;
+                        return dealerIndex + i; // return starting player
                     }
                     blindsFound++;
                     i++;
@@ -251,6 +252,20 @@ public class HostGameManager extends Service implements Parcelable {
         Player newPlayer = new Player(numPlayers, clientSocket);
         this.tempPlayers[numPlayers] = newPlayer;
         this.numPlayers++;
+    }
+
+    void endGame(Player winningPlayer) {
+        for (Player player : players) {
+            try {
+                player.playerOutput.writeByte(6);
+                player.playerOutput.writeUTF(winningPlayer.getPlayerName());
+                player.playerOutput.flush();
+                player.playerOutput.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override

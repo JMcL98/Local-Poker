@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -41,7 +40,9 @@ public class gameThread extends HandlerThread {
                             int j = startingPlayer;
                             while (i < 5) {
                                 if (j < hgm.numPlayers) {
-                                    hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
+                                    if (!hgm.players[j].folded) {
+                                        hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
+                                    }
                                     j++;
                                 } else {
                                     j = 0;
@@ -60,13 +61,16 @@ public class gameThread extends HandlerThread {
                             }
 
                         }
-
+                        Player winningPlayer = null;
                         for (Player player : hgm.players) {
                             if (!player.eliminated) {
+                                winningPlayer = player;
                                 Log.d("Jordan", "Game Finished");
-                                Log.d("Jordan", "Winning player: " + player.getPlayerName());
+                                Log.d("Jordan", "Winning player: " + winningPlayer.getPlayerName());
+                                break;
                             }
                         }
+                        hgm.endGame(winningPlayer);
 
 
                         break;
@@ -80,12 +84,17 @@ public class gameThread extends HandlerThread {
                                 try {
                                     byte msgType = cgm.clientObj.clientInput.readByte();
                                     switch (msgType) {
+                                        case (2) :
+                                            // update user values
                                         case (3) :
+                                            // post amounts on UI
                                             cgm.reply(activity.getBufferedAction());
                                         case (4) :
                                             cgm.addCard(Integer.parseInt(cgm.clientObj.clientInput.readUTF()));
                                         case (5) :
                                             cgm.myPlayer.resetHand();
+                                        case (6) :
+                                            activity.onDestroy();
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -102,4 +111,6 @@ public class gameThread extends HandlerThread {
     Handler getHandler() {
         return handler;
     }
+
+
 }
