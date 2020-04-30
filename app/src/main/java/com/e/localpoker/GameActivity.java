@@ -78,7 +78,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    void updateInfo(int myIndex) {
+    void updateInfo(int myIndex, boolean host) { // so it knows which manager to take information from
 
     }
 

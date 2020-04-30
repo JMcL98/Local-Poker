@@ -91,12 +91,11 @@ public class gameThread extends HandlerThread {
                                         case (2) :
                                             // update user values
                                         case (3) :
-                                            // post amounts on UI
-                                            final int callAmount = Integer.parseInt(cgm.clientObj.clientInput.readUTF());
+                                            cgm.callAmount = Integer.parseInt(cgm.clientObj.clientInput.readUTF());
                                             uiHandler.post(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    if (callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
+                                                    if (cgm.callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
                                                         activity.callButton.setText("Check");
                                                     }
                                                 }
@@ -105,7 +104,7 @@ public class gameThread extends HandlerThread {
                                             uiHandler.post(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    if (callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
+                                                    if (cgm.callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
                                                         activity.callButton.setText("Call");
                                                     }
                                                 }
@@ -115,6 +114,9 @@ public class gameThread extends HandlerThread {
                                         case (5) :
                                             cgm.players[cgm.myPlayerIndex].resetHand();
                                         case (6) :
+                                            String lastPlayer = cgm.clientObj.clientInput.readUTF();
+                                            Log.d("Jordan", "Winning Player: " + lastPlayer);
+                                            j = 0;
                                             activity.onDestroy();
                                         case (9) :
                                             String playersMessage = cgm.clientObj.clientInput.readUTF();
@@ -127,70 +129,70 @@ public class gameThread extends HandlerThread {
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
                                             } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF(), false);
                                             }
                                         case (11) :
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
                                             } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF(), false);
                                             }
                                         case (12) :
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
                                             } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF(), false);
                                             }
                                         case (13) :
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
                                             } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF(), false);
                                             }
                                         case (14) :
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
                                             } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF(), false);
                                             }
                                         case (15) :
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
                                             } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF(), false);
                                             }
                                         case (16) :
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
                                             } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF(), false);
                                             }
                                         case (17) :
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
                                             } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF(), false);
                                             }
                                         case (18) :
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
                                             } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF(), false);
                                             }
                                         case (19) :
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
                                             } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF(), false);
                                             }
                                     }
                                 } catch (IOException e) {
@@ -205,7 +207,7 @@ public class gameThread extends HandlerThread {
         };
     }
 
-    private void updatePlayerInfo(int index, String message) {
+    private void updatePlayerInfo(int index, String message, boolean host) {
         char type = message.charAt(0);
         switch (type) {
             case ('c') :
@@ -223,7 +225,7 @@ public class gameThread extends HandlerThread {
                 cgm.players[index].eliminated = true;
                 break;
         }
-        activity.updateInfo(index);
+        activity.updateInfo(index, host);
     }
 
 

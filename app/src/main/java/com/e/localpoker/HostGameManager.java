@@ -105,6 +105,7 @@ public class HostGameManager extends Service implements Parcelable {
             case "call":
                 players[playerID].addChipsInPlay(callAmount - players[playerID].chipsInPlay);
                 playersCalled++;
+                updateClientPlayerInfo();
                 break;
             case "raise":
                 players[playerID].addChipsInPlay((callAmount * 2) - players[playerID].chipsInPlay); // double current call
@@ -117,9 +118,15 @@ public class HostGameManager extends Service implements Parcelable {
         }
     }
 
-    void updatePlayerInfo(int index) {
+    void updateClientPlayerInfo(int index, String message) {
         for (int i = 0; i < numPlayers; i++) {
-
+            try {
+                players[i].playerOutput.writeByte(index + 10);
+                players[i].playerOutput.writeUTF(message);
+                players[i].playerOutput.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
