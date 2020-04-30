@@ -38,9 +38,13 @@ public class gameThread extends HandlerThread {
                             assert hgm != null;
                             int startingPlayer = hgm.blinds();
                             hgm.initialDeal();
-                            while (i == 1) {
-                                for (int j = startingPlayer; j < hgm.numPlayers; j++) {
+                            int j = startingPlayer;
+                            /*while (i == 1) {
+                                if (j < hgm.numPlayers) {
                                     hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
+                                    j++;
+                                } else {
+                                    j = 0;
                                 }
 
                                 if (hgm.playersInPlay == hgm.playersCalled) {
@@ -48,28 +52,61 @@ public class gameThread extends HandlerThread {
                                     hgm.advanceStage();
                                 }
                             }
+                            j = startingPlayer;
                             while (i == 2) {
-                                // second round
-                                // if all players have called
-                                i++;
-                                hgm.advanceStage();
+                                if (j < hgm.numPlayers) {
+                                    hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
+                                    j++;
+                                } else {
+                                    j = 0;
+                                }
+
+                                if (hgm.playersInPlay == hgm.playersCalled) {
+                                    i++;
+                                    hgm.advanceStage();
+                                }
                             }
+                            j = startingPlayer;
                             while (i == 3) {
-                                // third round
-                                // if all players have called
-                                i++;
-                                hgm.advanceStage();
+                                if (j < hgm.numPlayers) {
+                                    hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
+                                    j++;
+                                } else {
+                                    j = 0;
+                                }
+
+                                if (hgm.playersInPlay == hgm.playersCalled) {
+                                    i++;
+                                    hgm.advanceStage();
+                                }
                             }
                             while (i == 4) {
-                                // final round
-                                // if all players called
-                                i++;
-                                hgm.advanceStage();
+                                if (j < hgm.numPlayers) {
+                                    hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
+                                    j++;
+                                } else {
+                                    j = 0;
+                                }
+
+                                if (hgm.playersInPlay == hgm.playersCalled) {
+                                    i++;
+                                    hgm.advanceStage();
+                                }
+                            }*/
+                            while (i < 5) {
+                                if (j < hgm.numPlayers) {
+                                    hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
+                                    j++;
+                                } else {
+                                    j = 0;
+                                }
+
+                                if (hgm.playersInPlay == hgm.playersCalled) {
+                                    i++;
+                                    hgm.advanceStage();
+                                    j = startingPlayer;
+                                }
                             }
-
-
-
-
                             for (Player player : hgm.players) {
                                 if (player.getChips() < 1) {
                                     hgm.eliminatePlayer(player.getPlayerID());
