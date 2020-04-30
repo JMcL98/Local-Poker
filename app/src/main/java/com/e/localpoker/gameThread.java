@@ -223,7 +223,7 @@ public class gameThread extends HandlerThread {
                 cgm.players[index].eliminated = true;
                 break;
         }
-        activity.updateInfo();
+        activity.updateInfo(index);
     }
 
 

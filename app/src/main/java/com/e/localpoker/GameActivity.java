@@ -78,7 +78,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    void updateInfo() {
+    void updateInfo(int myIndex) {
 
     }
 

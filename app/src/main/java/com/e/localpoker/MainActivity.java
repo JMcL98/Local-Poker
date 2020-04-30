@@ -6,15 +6,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private int MAIN_TO_GAME_REQUEST_CODE = 1;
 
     DeckManager deckManager;
-    Player testPlayer;
-    Player[] players;
     String serviceName = "LocalPoker";
     hThread hthread1;
     EditText e1;
@@ -48,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         hthread1.start();
     }
 
-    public void onHostClick(View v) throws IOException {
+    public void onHostClick(View v) {
         String dName = e1.getText().toString();
         acceptedPlayer(dName);
         if (dName.equals("Name")) {
@@ -61,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             Message hostMessage = Message.obtain();
             hostMessage.setData(hostBundle);
             hostMessage.what = 1;
-          //  hThread1Handler = hthread1.getHandler();
             hthread1.getHandler().sendMessage(hostMessage);
             prepGame(1);
         }
@@ -80,46 +73,9 @@ public class MainActivity extends AppCompatActivity {
             Message clientMessage = Message.obtain();
             clientMessage.what = 2;
             clientMessage.setData(clientBundle);
-            //hThread1Handler = hthread1.getHandler();
             hthread1.getHandler().sendMessage(clientMessage);
             prepGame(2);
         }
-    }
-
-
-    public void dealButton(View v) {
-
-        //Card[] hand = new Card[7];
-        /*hand[6] = deckManager.dealCard(1);
-        hand[5] = deckManager.dealCard(14);
-        hand[4] = deckManager.dealCard(2);
-        hand[3] = deckManager.dealCard(3);
-        hand[2] = deckManager.dealCard(4);
-        hand[1] = deckManager.dealCard(5);
-        hand[0] = deckManager.dealCard(8);*/
-        for (int i = 0; i < 7; i++) {
-            testPlayer.addCard(deckManager.dealCard(60));
-
-            //hand[i] = deckManager.dealCard(60);
-            Log.d("Jordan", testPlayer.getHand()[i].getSuit() + "" + testPlayer.getHand()[i].getValue());
-        }
-        int strength = HandStrength.calculateStrength(testPlayer.getHand());
-        Log.d("Jordan", "Strength of hand: " + strength);
-        testPlayer.addChips(strength);
-        testPlayer.resetHand();
-        deckManager.resetDeck();
-
-        /*if (deckManager.deckInitialised) {
-            for (int i = 0; i < 53; i++) {
-                Card card = deckManager.dealCard();
-                if (card.getValue() > 0) {
-                    Log.d("Jordan", i + ": " + card.getSuit() + card.getValue() + "\n");
-                } else {
-                    Log.d("Jordan", i + ": Last card dealt");
-                }
-            }
-            deckManager.resetDeck();
-        }*/
     }
 
     public void onClickStart(View v) {
@@ -144,18 +100,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void prepGame(int type) {
+        Button hostButton = (Button) findViewById(R.id.button);
+        Button clientButton = (Button) findViewById(R.id.button2);
+        Button startButton = (Button) findViewById(R.id.startButton);
+        TextView pleaseWait = (TextView) findViewById(R.id.textView);
         if (type == 1) {
-            Button hostButton = (Button) findViewById(R.id.button);
-            Button clientButton = (Button) findViewById(R.id.button2);
-            Button startButton = (Button) findViewById(R.id.startButton);
             hostButton.setVisibility(View.INVISIBLE);
             clientButton.setVisibility(View.INVISIBLE);
             startButton.setVisibility(View.VISIBLE);
-
         } else if (type == 2) {
-            Button hostButton = (Button) findViewById(R.id.button);
-            Button clientButton = (Button) findViewById(R.id.button2);
-            TextView pleaseWait = (TextView) findViewById(R.id.textView);
             hostButton.setVisibility(View.INVISIBLE);
             clientButton.setVisibility(View.INVISIBLE);
             pleaseWait.setVisibility(View.VISIBLE);
