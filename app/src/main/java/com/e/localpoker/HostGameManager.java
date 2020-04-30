@@ -31,6 +31,9 @@ public class HostGameManager extends Service implements Parcelable {
     private int gameStage; // 5th stage = show cards
     int smallBlind;
     int bigBlind;
+    int callAmount;
+    int playersCalled;
+    int playersInPlay;
     private DeckManager dm;
     private Card[] communityCards;
     private Context calledContext;
@@ -46,6 +49,7 @@ public class HostGameManager extends Service implements Parcelable {
         this.gameStage = 0;
         this.numPlayers = 0;
         this.smallBlind = 10;
+        this.playersCalled = 0;
         this.bigBlind = 20;
         this.dm = dm;
         this.communityCards = new Card[5];
@@ -78,6 +82,7 @@ public class HostGameManager extends Service implements Parcelable {
             }
             player.addChips(STARTING_CHIPS);
         }
+        resetRound();
     }
 
     void eliminatePlayer(int ID) {
@@ -95,6 +100,24 @@ public class HostGameManager extends Service implements Parcelable {
         this.chipsPot += chips;
     }
 
+    void receiveCommand(String reply, int playerID) {
+        switch (reply) {
+            case "call":
+                players[playerID].addChipsInPlay(callAmount - players[playerID].chipsInPlay);
+                playersCalled++;
+                break;
+            case "raise":
+                players[playerID].addChipsInPlay((callAmount * 2) - players[playerID].chipsInPlay); // double current call
+                playersCalled = 1;
+                break;
+            case "fold":
+                players[playerID].fold();
+                playersInPlay--;
+                break;
+        }
+
+    }
+
     void advanceStage() {
         for (Player player : players) {
             addToPot(player.chipsInPlay);
@@ -106,10 +129,13 @@ public class HostGameManager extends Service implements Parcelable {
                 dealCommunityCard(0);
                 dealCommunityCard(1);
                 dealCommunityCard(2);
+                callAmount = 0;
             case (2) :
                 dealCommunityCard(3);
+                callAmount = 0;
             case (3) :
                 dealCommunityCard(4);
+                callAmount = 0;
             case (4) :
                 int handStrength = 0;
                 int roundWinner = 0;
@@ -128,9 +154,12 @@ public class HostGameManager extends Service implements Parcelable {
     void resetRound() {
         for (Player player : players) {
             player.resetHand();
+            player.unFold();
         }
         Arrays.fill(communityCards, null);
         dm.resetDeck();
+        playersInPlay = numPlayers;
+        this.callAmount = bigBlind;
         gameStage = 0;
     }
 
@@ -214,7 +243,7 @@ public class HostGameManager extends Service implements Parcelable {
     void dealCommunityCard(int index) {
         communityCards[index] = dm.dealCard(60);
         for (Player player : players) {
-            if (!player.eliminated) {
+            if (!player.eliminated && !player.folded) {
                 player.addCard(communityCards[index]);
             }
         }

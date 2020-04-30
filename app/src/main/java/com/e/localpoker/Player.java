@@ -15,10 +15,12 @@ class Player {
     int chipsInPlay;
     private Card[] hand;
     private int numCardsInHand;
+    boolean folded;
     boolean eliminated;
     Socket clientSocket;
     DataOutputStream playerOutput;
     DataInputStream playerInput;
+    GameActivity ga;
 
     Player (int playerID, Socket clientSocket) throws IOException {
         this.playerID = playerID;
@@ -34,6 +36,7 @@ class Player {
         chips = 0;
         chipsInPlay = 0;
         numCardsInHand = 0;
+        folded = false;
         eliminated = false;
         hand = new Card[7];
         resetHand();
@@ -42,6 +45,10 @@ class Player {
     void setPlayerName(String name) {
         this.playerName = name;
         Log.d("Jordan", "New player added: " + getPlayerName());
+    }
+
+    void setGameActivity(GameActivity ga) {
+        this.ga = ga;
     }
 
     String requestMove(int callAmount) {
@@ -61,12 +68,19 @@ class Player {
                 e.printStackTrace();
             }
         } else {
-
+            return ga.getBufferedAction();
         }
         return null;
     }
 
+    void fold() {
+        folded = true;
+        resetHand();
+    }
 
+    void unFold() {
+        folded = false;
+    }
 
     void addChips(int numChips) {
         this.chips += numChips;

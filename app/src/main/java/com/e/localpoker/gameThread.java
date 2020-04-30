@@ -32,17 +32,21 @@ public class gameThread extends HandlerThread {
                     case (1) :
                         Bundle receivedHostBundle = message.getData();
                         hgm = receivedHostBundle.getParcelable("manager");
+                        hgm.players[0].setGameActivity(activity);
                         int i = 1;
                         while (i > 0) {
                             assert hgm != null;
                             int startingPlayer = hgm.blinds();
                             hgm.initialDeal();
                             while (i == 1) {
-                                
-                                // first round
-                                // if all players have called
-                                i++;
-                                hgm.advanceStage();
+                                for (int j = startingPlayer; j < hgm.numPlayers; j++) {
+                                    hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
+                                }
+
+                                if (hgm.playersInPlay == hgm.playersCalled) {
+                                    i++;
+                                    hgm.advanceStage();
+                                }
                             }
                             while (i == 2) {
                                 // second round

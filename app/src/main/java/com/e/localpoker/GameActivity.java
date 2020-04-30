@@ -26,6 +26,7 @@ public class GameActivity extends AppCompatActivity {
         callButton = (Button) findViewById(R.id.callButton);
         raiseButton = (Button) findViewById(R.id.raiseButton);
         foldButton = (Button) findViewById(R.id.foldButton);
+        bufferedAction = "";
         gameThread = new gameThread(this, new Handler());
         gameThread.start();
         while (true) {
@@ -62,8 +63,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
     String getBufferedAction() {
-        String temp = bufferedAction;
-        bufferedAction = "";
-        return temp;
+        while (true) {
+            if (!bufferedAction.equals("")) {
+                String temp = bufferedAction;
+                bufferedAction = "";
+                return temp;
+            }
+        }
     }
 }
