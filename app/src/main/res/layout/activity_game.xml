@@ -7,6 +7,7 @@
     tools:context=".GameActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="384dp"
         android:layout_height="68dp"
         android:layout_marginStart="16dp"
@@ -52,9 +53,11 @@
     <LinearLayout
         android:layout_width="194dp"
         android:layout_height="108dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="2dp"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="537dp">
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/currentBet"

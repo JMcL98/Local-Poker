@@ -18,6 +18,7 @@ public class GameActivity extends AppCompatActivity {
     gameThread gameThread;
     TextView tv;
     Button callButton, raiseButton, foldButton;
+    TextView currentBet, chipsInPlay, totalChips;
     private String bufferedAction;
 
     @Override
@@ -27,7 +28,9 @@ public class GameActivity extends AppCompatActivity {
         callButton = (Button) findViewById(R.id.callButton);
         raiseButton = (Button) findViewById(R.id.raiseButton);
         foldButton = (Button) findViewById(R.id.foldButton);
-        tv = (TextView) findViewById(R.id.textView);
+        currentBet = (TextView) findViewById(R.id.currentBet);
+        chipsInPlay = (TextView) findViewById(R.id.chipsInPlay);
+        totalChips = (TextView) findViewById(R.id.myChips);
         bufferedAction = "";
         gameThread = new gameThread(this, new Handler());
         gameThread.start();
@@ -86,9 +89,13 @@ public class GameActivity extends AppCompatActivity {
 
     void updateInfo(boolean host) { // so it knows which manager to take information from
         if (host) {
-            // get from hostManager
+            totalChips.setText("Total Chips: " + hgm.players[myIndex].getChips());
+            chipsInPlay.setText("Chips in play: " + hgm.players[myIndex].chipsInPlay);
+            currentBet.setText("Current Bet: " + hgm.callAmount);
         } else {
-            // get from clientManager
+            totalChips.setText("Total Chips: " + cgm.players[myIndex].getChips());
+            chipsInPlay.setText("Chips in play: " + cgm.players[myIndex].chipsInPlay);
+            currentBet.setText("Current Bet: " + cgm.callAmount);
         }
     }
 

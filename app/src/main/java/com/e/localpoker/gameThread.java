@@ -245,7 +245,7 @@ public class gameThread extends HandlerThread {
                     break;
             }
         }
-        activity.updateInfo(index, host);
+        activity.updateInfo(host);
     }
 
 
