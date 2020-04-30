@@ -115,7 +115,12 @@ public class HostGameManager extends Service implements Parcelable {
                 playersInPlay--;
                 break;
         }
+    }
 
+    void updatePlayerInfo(int index) {
+        for (int i = 0; i < numPlayers; i++) {
+
+        }
     }
 
     void advanceStage() {

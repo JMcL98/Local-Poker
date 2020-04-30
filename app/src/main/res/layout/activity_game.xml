@@ -6,46 +6,78 @@
     android:layout_height="match_parent"
     tools:context=".GameActivity">
 
-    <Button
-        android:id="@+id/callButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="664dp"
-        android:layout_marginEnd="37dp"
-        android:layout_marginBottom="19dp"
-        android:onClick="onCall"
-        android:text="Call"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/raiseButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/raiseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="660dp"
-        android:layout_marginBottom="23dp"
-        android:onClick="onRaise"
-        android:text="Raise"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/foldButton"
-        app:layout_constraintStart_toEndOf="@+id/callButton"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/foldButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="660dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginBottom="23dp"
-        android:onClick="onFold"
-        android:text="Fold"
+    <LinearLayout
+        android:layout_width="384dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/raiseButton"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/callButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:onClick="onCall"
+            android:text="Call"
+            android:visibility="invisible"
+            tools:layout_editor_absoluteX="-10dp"
+            tools:layout_editor_absoluteY="588dp" />
+
+        <Button
+            android:id="@+id/raiseButton"
+            android:layout_width="116dp"
+            android:layout_height="wrap_content"
+            android:onClick="onRaise"
+            android:text="Raise"
+            android:visibility="invisible"
+            tools:layout_editor_absoluteX="14dp"
+            tools:layout_editor_absoluteY="595dp" />
+
+        <Button
+            android:id="@+id/foldButton"
+            android:layout_width="118dp"
+            android:layout_height="wrap_content"
+            android:onClick="onFold"
+            android:text="Fold"
+            android:visibility="invisible"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="583dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="194dp"
+        android:layout_height="108dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="537dp">
+
+        <TextView
+            android:id="@+id/currentBet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Current Bet:"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/chipsInPlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chips In Play:"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/myChips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total Chips:"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

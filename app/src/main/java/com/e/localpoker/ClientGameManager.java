@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class ClientGameManager extends Service implements Parcelable {
 
@@ -26,7 +27,10 @@ public class ClientGameManager extends Service implements Parcelable {
     String name;
     Context calledContext;
     NsdClient clientObj;
-    Player myPlayer;
+    Player[] players;
+    int myPlayerIndex;
+    int callAmount;
+    int totalPot;
     GameActivity gameActivity;
     DeckManager dm;
 
@@ -34,11 +38,25 @@ public class ClientGameManager extends Service implements Parcelable {
         this.name = name;
         this.calledContext = context;
         this.dm = new DeckManager();
+        this.callAmount = 0;
+        this.totalPot = 0;
+
+    }
+
+    void initialisePlayers(int numPlayers, int myIndex) {
+        players = new Player[numPlayers];
+        Arrays.fill(players, null);
+        myPlayerIndex = myIndex;
+        addPlayer(this.name, this.myPlayerIndex);
+    }
+
+    void addPlayer(String name, int index) {
         try {
-            myPlayer = new Player(0, null);
+            players[index] = new Player(0, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        players[index].setPlayerName(name);
     }
 
     void reply(String action) {
@@ -52,7 +70,7 @@ public class ClientGameManager extends Service implements Parcelable {
     }
 
     void addCard(int index) {
-        myPlayer.addCard(dm.dealSpecificCard(index));
+        players[myPlayerIndex].addCard(dm.dealSpecificCard(index));
     }
 
     void setGameActivity(GameActivity gameActivity) {

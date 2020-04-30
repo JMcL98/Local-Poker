@@ -63,13 +63,23 @@ public class GameActivity extends AppCompatActivity {
     }
 
     String getBufferedAction() {
+        callButton.setVisibility(View.VISIBLE);
+        raiseButton.setVisibility(View.VISIBLE);
+        foldButton.setVisibility(View.VISIBLE);
         while (true) {
             if (!bufferedAction.equals("")) {
                 String temp = bufferedAction;
                 bufferedAction = "";
+                callButton.setVisibility(View.INVISIBLE);
+                raiseButton.setVisibility(View.INVISIBLE);
+                foldButton.setVisibility(View.INVISIBLE);
                 return temp;
             }
         }
+    }
+
+    void updateInfo() {
+
     }
 
     @Override

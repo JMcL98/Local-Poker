@@ -24,7 +24,7 @@ class Player {
 
     Player (int playerID, Socket clientSocket) throws IOException {
         this.playerID = playerID;
-        if (playerID != 0) {
+        if (playerID > 0) {
             this.clientSocket = clientSocket;
             this.playerOutput = new DataOutputStream(clientSocket.getOutputStream());
             this.playerInput = new DataInputStream(clientSocket.getInputStream());

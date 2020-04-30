@@ -83,18 +83,115 @@ public class gameThread extends HandlerThread {
                             if (cgm.clientObj.clientInput != null) {
                                 try {
                                     byte msgType = cgm.clientObj.clientInput.readByte();
+                                    int playerMessageIndex;
+                                    int myIndex;
                                     switch (msgType) {
+                                        case (1) :
+
                                         case (2) :
                                             // update user values
                                         case (3) :
                                             // post amounts on UI
+                                            final int callAmount = Integer.parseInt(cgm.clientObj.clientInput.readUTF());
+                                            uiHandler.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
+                                                        activity.callButton.setText("Check");
+                                                    }
+                                                }
+                                            });
                                             cgm.reply(activity.getBufferedAction());
+                                            uiHandler.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
+                                                        activity.callButton.setText("Call");
+                                                    }
+                                                }
+                                            });
                                         case (4) :
                                             cgm.addCard(Integer.parseInt(cgm.clientObj.clientInput.readUTF()));
                                         case (5) :
-                                            cgm.myPlayer.resetHand();
+                                            cgm.players[cgm.myPlayerIndex].resetHand();
                                         case (6) :
                                             activity.onDestroy();
+                                        case (9) :
+                                            String playersMessage = cgm.clientObj.clientInput.readUTF();
+                                            myIndex = Integer.parseInt(playersMessage.substring(0, 0));
+                                            String numPlayersS = playersMessage.substring(1);
+                                            int numPlayers = Integer.parseInt(numPlayersS);
+                                            cgm.initialisePlayers(numPlayers, myIndex);
+                                        case (10) :
+                                            playerMessageIndex = msgType - 10;
+                                            if (cgm.players[playerMessageIndex] == null) {
+                                                cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
+                                            } else {
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                            }
+                                        case (11) :
+                                            playerMessageIndex = msgType - 10;
+                                            if (cgm.players[playerMessageIndex] == null) {
+                                                cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
+                                            } else {
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                            }
+                                        case (12) :
+                                            playerMessageIndex = msgType - 10;
+                                            if (cgm.players[playerMessageIndex] == null) {
+                                                cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
+                                            } else {
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                            }
+                                        case (13) :
+                                            playerMessageIndex = msgType - 10;
+                                            if (cgm.players[playerMessageIndex] == null) {
+                                                cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
+                                            } else {
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                            }
+                                        case (14) :
+                                            playerMessageIndex = msgType - 10;
+                                            if (cgm.players[playerMessageIndex] == null) {
+                                                cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
+                                            } else {
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                            }
+                                        case (15) :
+                                            playerMessageIndex = msgType - 10;
+                                            if (cgm.players[playerMessageIndex] == null) {
+                                                cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
+                                            } else {
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                            }
+                                        case (16) :
+                                            playerMessageIndex = msgType - 10;
+                                            if (cgm.players[playerMessageIndex] == null) {
+                                                cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
+                                            } else {
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                            }
+                                        case (17) :
+                                            playerMessageIndex = msgType - 10;
+                                            if (cgm.players[playerMessageIndex] == null) {
+                                                cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
+                                            } else {
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                            }
+                                        case (18) :
+                                            playerMessageIndex = msgType - 10;
+                                            if (cgm.players[playerMessageIndex] == null) {
+                                                cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
+                                            } else {
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                            }
+                                        case (19) :
+                                            playerMessageIndex = msgType - 10;
+                                            if (cgm.players[playerMessageIndex] == null) {
+                                                cgm.addPlayer(cgm.clientObj.clientInput.readUTF(), playerMessageIndex);
+                                            } else {
+                                                updatePlayerInfo(playerMessageIndex, cgm.clientObj.clientInput.readUTF());
+                                            }
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -107,6 +204,28 @@ public class gameThread extends HandlerThread {
             }
         };
     }
+
+    private void updatePlayerInfo(int index, String message) {
+        char type = message.charAt(0);
+        switch (type) {
+            case ('c') :
+                cgm.players[index].chipsInPlay = (cgm.callAmount - cgm.players[index].chipsInPlay);
+                break;
+            case ('r') :
+                int raiseAmount = Integer.parseInt(message.substring(1));
+                cgm.players[index].chipsInPlay = (raiseAmount);
+                cgm.callAmount = raiseAmount;
+                break;
+            case ('f') :
+                cgm.players[index].fold();
+                break;
+            case ('e') :
+                cgm.players[index].eliminated = true;
+                break;
+        }
+        activity.updateInfo();
+    }
+
 
     Handler getHandler() {
         return handler;
