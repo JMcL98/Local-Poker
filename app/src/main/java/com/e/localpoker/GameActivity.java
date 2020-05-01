@@ -52,12 +52,9 @@ public class GameActivity extends AppCompatActivity {
                 Message gameMessage = Message.obtain(gameThread.getHandler());
                 gameMessage.setData(receivedBundle);
                 if (host) {
-                    hgm = receivedBundle.getParcelable("manager");
                     gameMessage.what = 1;
                     setMyIndex(0);
                 } else {
-                    cgm = receivedBundle.getParcelable("manager");
-                    cgm.setGameActivity(this);
                     gameMessage.what = 2;
                 }
                 gameMessage.sendToTarget();
@@ -68,6 +65,15 @@ public class GameActivity extends AppCompatActivity {
 
     void setMyIndex(int i) {
         this.myIndex = i;
+    }
+
+    void setHostManager(HostGameManager h) {
+        this.hgm = h;
+    }
+
+    void setClientManager(ClientGameManager c) {
+        this.cgm = c;
+        cgm.setGameActivity(this);
     }
 
     void resetCards() {

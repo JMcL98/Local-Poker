@@ -30,15 +30,18 @@ public class gameThread extends HandlerThread {
                 switch (message.what) {
                     case (1) :
                         Bundle receivedHostBundle = message.getData();
-                        hgm = receivedHostBundle.getParcelable("manager");
-                        assert hgm != null;
+                        hgm = new HostGameManager(MainActivity.players);
+                        activity.setHostManager(hgm);
                         while (true) {
                             if (hgm.players != null) {
                                 break;
                             }
                         }
                         hgm.players[0].setGameActivity(activity);
+                        hgm.sendNames();
+                        hgm.resetRound();
                         int i = 1;
+                        Log.d("Jordan", "Game Started");
                         while (i > 0) {
                             int startingPlayer = hgm.blinds();
                             hgm.initialDeal();
@@ -85,7 +88,8 @@ public class gameThread extends HandlerThread {
                         break;
                     case (2) :
                         Bundle receivedClientBundle = message.getData();
-                        cgm = receivedClientBundle.getParcelable("manager");
+                        cgm = new ClientGameManager(MainActivity.clientOutput, MainActivity.clientInput, receivedClientBundle.getString("name"));
+                        activity.setClientManager(cgm);
                         int j = 1;
                         while (j > 0) {
                             assert cgm != null;
@@ -97,8 +101,10 @@ public class gameThread extends HandlerThread {
                                     switch (msgType) {
                                         case (1) :
 
+                                            break;
                                         case (2) :
                                             // update user values
+                                            break;
                                         case (3) :
                                             cgm.callAmount = Integer.parseInt(cgm.clientInput.readUTF());
                                             uiHandler.post(new Runnable() {
@@ -119,86 +125,41 @@ public class gameThread extends HandlerThread {
                                                     }
                                                 }
                                             });
+                                            break;
                                         case (4) :
-                                            cgm.addCard(Integer.parseInt(cgm.clientInput.readUTF()));
+                                            final int cardI = Integer.parseInt(cgm.clientInput.readUTF());
+                                            uiHandler.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    cgm.addCard(cardI);
+                                                }
+                                            });
+                                            break;
                                         case (5) :
                                             cgm.players[cgm.myPlayerIndex].resetHand();
                                             // more
+                                            break;
                                         case (6) :
                                             String lastPlayer = cgm.clientInput.readUTF();
                                             Log.d("Jordan", "Winning Player: " + lastPlayer);
                                             j = 0;
                                             activity.onDestroy();
+                                            break;
                                         case (9) :
                                             String playersMessage = cgm.clientInput.readUTF();
-                                            myIndex = Integer.parseInt(playersMessage.substring(0, 0));
+                                            myIndex = Character.getNumericValue(playersMessage.charAt(0));
                                             activity.setMyIndex(myIndex);
-                                            String numPlayersS = playersMessage.substring(1);
-                                            int numPlayers = Integer.parseInt(numPlayersS);
-                                            cgm.initialisePlayers(numPlayers, myIndex);
+                                            cgm.initialisePlayers(Character.getNumericValue(playersMessage.charAt(1)), myIndex);
+                                            break;
                                         case (10) :
-                                            playerMessageIndex = msgType - 10;
-                                            if (cgm.players[playerMessageIndex] == null) {
-                                                cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
-                                            } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
-                                            }
                                         case (11) :
-                                            playerMessageIndex = msgType - 10;
-                                            if (cgm.players[playerMessageIndex] == null) {
-                                                cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
-                                            } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
-                                            }
                                         case (12) :
-                                            playerMessageIndex = msgType - 10;
-                                            if (cgm.players[playerMessageIndex] == null) {
-                                                cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
-                                            } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
-                                            }
                                         case (13) :
-                                            playerMessageIndex = msgType - 10;
-                                            if (cgm.players[playerMessageIndex] == null) {
-                                                cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
-                                            } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
-                                            }
                                         case (14) :
-                                            playerMessageIndex = msgType - 10;
-                                            if (cgm.players[playerMessageIndex] == null) {
-                                                cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
-                                            } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
-                                            }
                                         case (15) :
-                                            playerMessageIndex = msgType - 10;
-                                            if (cgm.players[playerMessageIndex] == null) {
-                                                cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
-                                            } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
-                                            }
                                         case (16) :
-                                            playerMessageIndex = msgType - 10;
-                                            if (cgm.players[playerMessageIndex] == null) {
-                                                cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
-                                            } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
-                                            }
                                         case (17) :
-                                            playerMessageIndex = msgType - 10;
-                                            if (cgm.players[playerMessageIndex] == null) {
-                                                cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
-                                            } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
-                                            }
                                         case (18) :
-                                            playerMessageIndex = msgType - 10;
-                                            if (cgm.players[playerMessageIndex] == null) {
-                                                cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
-                                            } else {
-                                                updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
-                                            }
                                         case (19) :
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
@@ -206,6 +167,7 @@ public class gameThread extends HandlerThread {
                                             } else {
                                                 updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
                                             }
+                                            break;
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();

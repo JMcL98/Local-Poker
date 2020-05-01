@@ -46,6 +46,15 @@ public class ClientGameManager extends Service implements Parcelable {
         this.totalPot = 0;
     }
 
+    ClientGameManager(DataOutputStream o, DataInputStream i, String name) {
+        this.name = name;
+        clientOutput = o;
+        clientInput = i;
+        this.dm = new DeckManager();
+        this.callAmount = 0;
+        this.totalPot = 0;
+    }
+
     protected ClientGameManager(Parcel in) {
         STARTING_CHIPS = in.readInt();
         host = in.readParcelable(HostGameManager.class.getClassLoader());
@@ -68,6 +77,9 @@ public class ClientGameManager extends Service implements Parcelable {
     };
 
     void initialisePlayers(int numPlayers, int myIndex) {
+        if (numPlayers == 1) {
+            numPlayers = 10;
+        }
         players = new Player[numPlayers];
         Arrays.fill(players, null);
         myPlayerIndex = myIndex;

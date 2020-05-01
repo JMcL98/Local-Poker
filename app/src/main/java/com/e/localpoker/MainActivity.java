@@ -14,13 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
     private int MAIN_TO_GAME_REQUEST_CODE = 1;
 
-    DeckManager deckManager;
     String serviceName = "LocalPoker";
     hThread hthread1;
     EditText e1;
@@ -30,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout playerList2;
     int numberOfPlayersDisplayed;
     private boolean ready;
+    static Player[] players;
+    static DataInputStream clientInput;
+    static DataOutputStream clientOutput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             Bundle hostBundle = new Bundle();
-            hostBundle.putParcelable("manager", hgm);
             hostBundle.putBoolean("type", true);
             hgm.hostObj.acceptingPlayers = false;
             gameLaunch(hostBundle);
@@ -90,13 +94,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void clientStart() {
+        clientInput = cgm.nsdClient.clientInput;
+        clientOutput = cgm.nsdClient.clientOutput;
         Bundle clientBundle = new Bundle();
-        clientBundle.putParcelable("manager", cgm);
         clientBundle.putBoolean("type", false);
+        clientBundle.putString("name", e1.getText().toString());
         gameLaunch(clientBundle);
     }
 
     private void gameLaunch(Bundle bundle) {
+        players = new Player[numberOfPlayersDisplayed];
+        for (int i = 0; i < numberOfPlayersDisplayed; i++) {
+            players[i] = hgm.tempPlayers[i];
+        }
         Intent gameIntent = new Intent(MainActivity.this, GameActivity.class);
         gameIntent.putExtras(bundle);
         startActivityForResult(gameIntent, MAIN_TO_GAME_REQUEST_CODE);

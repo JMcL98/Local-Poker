@@ -18,19 +18,19 @@ class Player {
     boolean folded;
     boolean allIn;
     boolean eliminated;
-    Socket clientSocket;
     DataOutputStream playerOutput;
     DataInputStream playerInput;
+    Socket socket;
     GameActivity ga;
 
     Player (int playerID, Socket clientSocket) throws IOException {
         this.playerID = playerID;
         if (playerID > 0) {
-            this.clientSocket = clientSocket;
+            this.socket = clientSocket;
             this.playerOutput = new DataOutputStream(clientSocket.getOutputStream());
             this.playerInput = new DataInputStream(clientSocket.getInputStream());
         } else {
-            this.clientSocket = null;
+            this.socket = null;
             this.playerOutput = null;
             this.playerInput = null;
         }

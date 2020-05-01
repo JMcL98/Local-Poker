@@ -45,16 +45,24 @@ public class HostGameManager extends Service implements Parcelable {
     public HostGameManager(Context context, String hostname) {
         this.tempPlayers = new Player[MAX_PLAYERS];
         this.hostName = hostname;
+        this.calledContext = context;
+    }
+
+    public HostGameManager(Player[] players) {
+        this.players = players;
         this.chipsPot = 0;
         this.gameStage = 1;
-        this.numPlayers = 0;
+        this.numPlayers = players.length;
         this.smallBlind = 10;
         this.playersCalled = 0;
         this.bigBlind = 20;
         this.dm = new DeckManager();
         this.communityCards = new Card[5];
-        this.calledContext = context;
         this.dealerIndex = 0;
+        for (Player player : this.players) {
+            player.addChips(STARTING_CHIPS);
+        }
+        this.playersLeft = numPlayers;
     }
 
 
@@ -93,24 +101,43 @@ public class HostGameManager extends Service implements Parcelable {
     }
 
     void startGame() {
-        playersLeft = numPlayers;
-        players = new Player[numPlayers];
-        for (int i = 0; i < numPlayers; i++) {
-            players[i] = tempPlayers[i];
+        for (int i = 0; i < tempPlayers.length; i++) {
+            if (tempPlayers[i] != null) {
+                if (tempPlayers[i].playerOutput != null) {
+                    try {
+                        tempPlayers[i].playerOutput.writeByte(1);
+                        tempPlayers[i].playerOutput.writeUTF("start_game");
+                        tempPlayers[i].playerOutput.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
-        for (Player player : players) {
-            if (player.playerOutput != null) {
+    }
+
+    void sendNames() {
+        for (int a = 1; a < numPlayers; a++) {
+            try {
+                players[a].playerOutput.writeByte(9);
+                players[a].playerOutput.writeUTF(a + "" + numPlayers);
+                players[a].playerOutput.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        for (int i = 0; i < numPlayers; i++) {
+            for (int j = 1; j < numPlayers; j++) {
                 try {
-                    player.playerOutput.writeByte(1);
-                    player.playerOutput.writeUTF("start_game");
-                    player.playerOutput.flush();
+                    players[j].playerOutput.writeByte(10 + i);
+                    players[j].playerOutput.writeUTF(players[j].getPlayerName());
+                    players[j].playerOutput.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             }
-            player.addChips(STARTING_CHIPS);
         }
-        resetRound();
     }
 
     void eliminatePlayer(int ID) {
