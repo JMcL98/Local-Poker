@@ -76,6 +76,7 @@ public class GameActivity extends AppCompatActivity {
     void addCard(int index) {
         if (numCardsInPlay < 2) {
             ImageView card = new ImageView(this);
+            card.setImageResource(R.drawable.c52);
            // hand.addView(new ImageView(this));
         }
     }
