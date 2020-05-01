@@ -57,6 +57,8 @@ public class NsdClient {
                 hostSocket = new Socket(hostAddress, hostPort);
                 clientOutput = new DataOutputStream(hostSocket.getOutputStream());
                 clientInput = new DataInputStream(hostSocket.getInputStream());
+                cgm.clientInput = clientInput;
+                cgm.clientOutput = clientOutput;
             } catch (IOException e) {
                 e.printStackTrace();
             }

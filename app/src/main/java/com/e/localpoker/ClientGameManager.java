@@ -14,6 +14,8 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -26,13 +28,15 @@ public class ClientGameManager extends Service implements Parcelable {
     HostGameManager host;
     String name;
     Context calledContext;
-    NsdClient clientObj;
     Player[] players;
     int myPlayerIndex;
     int callAmount;
     int totalPot;
     GameActivity gameActivity;
     DeckManager dm;
+    DataInputStream clientInput;
+    DataOutputStream clientOutput;
+    NsdClient nsdClient;
 
     ClientGameManager(Context context, String name) {
         this.name = name;
@@ -40,8 +44,28 @@ public class ClientGameManager extends Service implements Parcelable {
         this.dm = new DeckManager();
         this.callAmount = 0;
         this.totalPot = 0;
-
     }
+
+    protected ClientGameManager(Parcel in) {
+        STARTING_CHIPS = in.readInt();
+        host = in.readParcelable(HostGameManager.class.getClassLoader());
+        name = in.readString();
+        myPlayerIndex = in.readInt();
+        callAmount = in.readInt();
+        totalPot = in.readInt();
+    }
+
+    public static final Creator<ClientGameManager> CREATOR = new Creator<ClientGameManager>() {
+        @Override
+        public ClientGameManager createFromParcel(Parcel in) {
+            return new ClientGameManager(in);
+        }
+
+        @Override
+        public ClientGameManager[] newArray(int size) {
+            return new ClientGameManager[size];
+        }
+    };
 
     void initialisePlayers(int numPlayers, int myIndex) {
         players = new Player[numPlayers];
@@ -61,9 +85,9 @@ public class ClientGameManager extends Service implements Parcelable {
 
     void reply(String action) {
         try {
-            clientObj.clientOutput.writeByte(4);
-            clientObj.clientOutput.writeUTF(action);
-            clientObj.clientOutput.flush();
+            clientOutput.writeByte(4);
+            clientOutput.writeUTF(action);
+            clientOutput.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,26 +103,10 @@ public class ClientGameManager extends Service implements Parcelable {
     }
 
 
-    protected ClientGameManager(Parcel in) {
-        host = in.readParcelable(HostGameManager.class.getClassLoader());
-        name = in.readString();
-    }
-
     void startClientNsd() {
-        clientObj = new NsdClient(this.calledContext, "Client", this);
+        nsdClient = new NsdClient(this.calledContext, "Client", this);
     }
 
-    public static final Creator<ClientGameManager> CREATOR = new Creator<ClientGameManager>() {
-        @Override
-        public ClientGameManager createFromParcel(Parcel in) {
-            return new ClientGameManager(in);
-        }
-
-        @Override
-        public ClientGameManager[] newArray(int size) {
-            return new ClientGameManager[size];
-        }
-    };
 
     @Override
     public void onDestroy() {
@@ -111,6 +119,7 @@ public class ClientGameManager extends Service implements Parcelable {
         return null;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -118,7 +127,11 @@ public class ClientGameManager extends Service implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(STARTING_CHIPS);
         dest.writeParcelable(host, flags);
         dest.writeString(name);
+        dest.writeInt(myPlayerIndex);
+        dest.writeInt(callAmount);
+        dest.writeInt(totalPot);
     }
 }

@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(this, "Please input a name", Toast.LENGTH_SHORT);
                 toast.show();
             } else {
-                hgm = new HostGameManager(deckManager, this, dName);
+                hgm = new HostGameManager(this, dName);
                 Bundle hostBundle = new Bundle();
                 hostBundle.putParcelable("hostmanager", hgm);
                 Message hostMessage = Message.obtain();

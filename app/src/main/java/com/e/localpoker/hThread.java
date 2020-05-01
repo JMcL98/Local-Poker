@@ -93,19 +93,19 @@ public class hThread extends HandlerThread {
                         int j = 1;
                         byte msgType2;
                         while (j > 0) {
-                            if (cgm.clientObj.clientOutput != null) {
+                            if (cgm.clientOutput != null) {
                                 if (j == 1) {
                                     try {
-                                        cgm.clientObj.sendName();
+                                        cgm.nsdClient.sendName();
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
                                 }
-                                if (cgm.clientObj.clientInput != null) {
+                                if (cgm.clientInput != null) {
                                     try {
-                                        msgType2 = cgm.clientObj.clientInput.readByte();
+                                        msgType2 = cgm.clientInput.readByte();
                                         if (msgType2 == 1) {
-                                            String testMessage = cgm.clientObj.clientInput.readUTF();
+                                            String testMessage = cgm.clientInput.readUTF();
                                             if (testMessage.equals("name_received")) {
                                                 j = 2;
                                             } else if (testMessage.equals("start_game")) {

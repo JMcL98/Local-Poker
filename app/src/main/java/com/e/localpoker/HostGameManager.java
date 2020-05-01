@@ -42,7 +42,7 @@ public class HostGameManager extends Service implements Parcelable {
 
     int dealerIndex;
 
-    public HostGameManager(DeckManager dm, Context context, String hostname) {
+    public HostGameManager(Context context, String hostname) {
         this.tempPlayers = new Player[MAX_PLAYERS];
         this.hostName = hostname;
         this.chipsPot = 0;
@@ -51,12 +51,40 @@ public class HostGameManager extends Service implements Parcelable {
         this.smallBlind = 10;
         this.playersCalled = 0;
         this.bigBlind = 20;
-        this.dm = dm;
+        this.dm = new DeckManager();
         this.communityCards = new Card[5];
         this.calledContext = context;
         this.dealerIndex = 0;
     }
 
+
+    protected HostGameManager(Parcel in) {
+        MAX_PLAYERS = in.readInt();
+        STARTING_CHIPS = in.readInt();
+        numPlayers = in.readInt();
+        playersLeft = in.readInt();
+        chipsPot = in.readInt();
+        gameStage = in.readInt();
+        smallBlind = in.readInt();
+        bigBlind = in.readInt();
+        callAmount = in.readInt();
+        playersCalled = in.readInt();
+        playersInPlay = in.readInt();
+        hostName = in.readString();
+        dealerIndex = in.readInt();
+    }
+
+    public static final Creator<HostGameManager> CREATOR = new Creator<HostGameManager>() {
+        @Override
+        public HostGameManager createFromParcel(Parcel in) {
+            return new HostGameManager(in);
+        }
+
+        @Override
+        public HostGameManager[] newArray(int size) {
+            return new HostGameManager[size];
+        }
+    };
 
     void startHostNsd() throws IOException {
         hostObj = new NsdHost(this.calledContext, this);
@@ -296,37 +324,27 @@ public class HostGameManager extends Service implements Parcelable {
         return null;
     }
 
-    protected HostGameManager(Parcel in) {
-        MAX_PLAYERS = in.readInt();
-        numPlayers = in.readInt();
-        chipsPot = in.readInt();
-        gameStage = in.readInt();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(MAX_PLAYERS);
-        dest.writeInt(numPlayers);
-        dest.writeInt(chipsPot);
-        dest.writeInt(gameStage);
-    }
-
     @Override
     public int describeContents() {
         return 0;
     }
 
-    public static final Creator<HostGameManager> CREATOR = new Creator<HostGameManager>() {
-        @Override
-        public HostGameManager createFromParcel(Parcel in) {
-            return new HostGameManager(in);
-        }
-
-        @Override
-        public HostGameManager[] newArray(int size) {
-            return new HostGameManager[size];
-        }
-    };
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(MAX_PLAYERS);
+        dest.writeInt(STARTING_CHIPS);
+        dest.writeInt(numPlayers);
+        dest.writeInt(playersLeft);
+        dest.writeInt(chipsPot);
+        dest.writeInt(gameStage);
+        dest.writeInt(smallBlind);
+        dest.writeInt(bigBlind);
+        dest.writeInt(callAmount);
+        dest.writeInt(playersCalled);
+        dest.writeInt(playersInPlay);
+        dest.writeString(hostName);
+        dest.writeInt(dealerIndex);
+    }
 }
 
 
