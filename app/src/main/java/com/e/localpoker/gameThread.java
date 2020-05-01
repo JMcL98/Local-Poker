@@ -105,7 +105,7 @@ public class gameThread extends HandlerThread {
                                                     activity.raiseAmount.setText(cgm.callAmount);
                                                 }
                                             });
-                                            cgm.reply(activity.getBufferedAction());
+                                            cgm.reply(activity.getBufferedAction(cgm.callAmount));
                                             uiHandler.post(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -118,6 +118,7 @@ public class gameThread extends HandlerThread {
                                             cgm.addCard(Integer.parseInt(cgm.clientObj.clientInput.readUTF()));
                                         case (5) :
                                             cgm.players[cgm.myPlayerIndex].resetHand();
+                                            // more
                                         case (6) :
                                             String lastPlayer = cgm.clientObj.clientInput.readUTF();
                                             Log.d("Jordan", "Winning Player: " + lastPlayer);

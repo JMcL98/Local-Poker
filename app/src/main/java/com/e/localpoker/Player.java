@@ -70,7 +70,7 @@ class Player {
                 e.printStackTrace();
             }
         } else {
-            return ga.getBufferedAction();
+            return ga.getBufferedAction(callAmount);
         }
         return null;
     }

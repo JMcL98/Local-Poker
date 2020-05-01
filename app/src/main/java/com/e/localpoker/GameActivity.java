@@ -2,12 +2,15 @@ package com.e.localpoker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +24,9 @@ public class GameActivity extends AppCompatActivity {
     EditText raiseAmount;
     Button callButton, raiseButton, foldButton;
     TextView currentBet, chipsInPlay, totalChips;
+    LinearLayout hand;
     private String bufferedAction;
+    int numCardsInPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,8 @@ public class GameActivity extends AppCompatActivity {
         chipsInPlay = (TextView) findViewById(R.id.chipsInPlay);
         totalChips = (TextView) findViewById(R.id.myChips);
         raiseAmount = (EditText) findViewById(R.id.raiseAmount);
+        hand = (LinearLayout) findViewById(R.id.hand);
+        numCardsInPlay = 0;
         bufferedAction = "";
         gameThread = new gameThread(this, new Handler());
         gameThread.start();
@@ -60,6 +67,17 @@ public class GameActivity extends AppCompatActivity {
 
     void setMyIndex(int i) {
         this.myIndex = i;
+    }
+
+    void resetCards() {
+
+    }
+
+    void addCard(int index) {
+        if (numCardsInPlay < 2) {
+            ImageView card = new ImageView(this);
+           // hand.addView(new ImageView(this));
+        }
     }
 
     public void onCall(View v) {
