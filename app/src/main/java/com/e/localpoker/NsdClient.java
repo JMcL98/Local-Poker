@@ -39,12 +39,8 @@ public class NsdClient {
         @Override
         public void onServiceResolved(NsdServiceInfo serviceInfo) {
             Log.d("Jordan", "Resolve successful");
-            Toast toast = Toast.makeText(calledContext, "Resolve Successful", Toast.LENGTH_SHORT);
-            toast.show();
             if (serviceInfo.getServiceName().equals(serviceName)) {
                 Log.d("Jordan", "Same Machine");
-                Toast toast2 = Toast.makeText(calledContext, "Resolve: Same machine", Toast.LENGTH_SHORT);
-                toast2.show();
                 return;
             }
 
@@ -86,8 +82,6 @@ public class NsdClient {
             @Override
             public void onDiscoveryStarted(String serviceType) {
                 Log.d("Jordan", "Discovery Started");
-                Toast toast = Toast.makeText(calledContext, "Discovery Started", Toast.LENGTH_SHORT);
-                toast.show();
             }
 
             @Override
@@ -101,18 +95,12 @@ public class NsdClient {
                     // Service type is the string containing the protocol and
                     // transport layer for this service.
                     Log.d("Jordan", "Unknown Service Type");
-                    Toast toast2 = Toast.makeText(calledContext, "Unknown Service Type", Toast.LENGTH_SHORT);
-                    toast2.show();
                 } else if (serviceInfo.getServiceName().equals(serviceName)) {
                     // The name of the service tells the user what they'd be
                     // connecting to. It could be "Bob's Chat App".
                     Log.d("Jordan", "Same machine");
-                    Toast toast3 = Toast.makeText(calledContext, "Same Machine 1", Toast.LENGTH_SHORT);
-                    toast3.show();
                 } else {
                     Log.d("Jordan", "Different Machine");
-                    Toast toast4 = Toast.makeText(calledContext, "Different Machine", Toast.LENGTH_SHORT);
-                    toast4.show();
                     // connect to the service and obtain serviceInfo
                     nsdManager.resolveService(serviceInfo, resolveListener);
                 }

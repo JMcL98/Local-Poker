@@ -121,13 +121,6 @@ public class GameActivity extends AppCompatActivity {
                 break;
         }
         numCardsInPlay++;
-
-
-      /*  if (numCardsInPlay < 2) {
-            hand.addView(getCardImage(index));
-        } else {
-            comCards.addView(getCardImage(index));
-        }*/
     }
 
     public void onCall(View v) {

@@ -61,7 +61,7 @@ class Player {
                 playerOutput.flush();
                 while (true) {
                     if (playerInput != null) {
-                        if (playerInput.readByte() == 3) {
+                        if (playerInput.readByte() == 4) {
                             return playerInput.readUTF();
                         }
                     }

@@ -267,15 +267,18 @@ public class HostGameManager extends Service implements Parcelable {
 
     int blinds() {
         if (playersLeft == 2) {
+            int temp = 0;
             for (int i = 0; i < players.length; i++) {
                 if (!players[i].eliminated) {
                     if (i == dealerIndex) {
                         players[i].addChipsInPlay(bigBlind);
                     } else {
                         players[i].addChipsInPlay(smallBlind);
+                        temp = i;
                     }
                 }
             }
+            return temp;
         } else {
             int blindsFound = 0;
             int i = 1;
@@ -299,7 +302,6 @@ public class HostGameManager extends Service implements Parcelable {
             }
 
         }
-        return 0;
     }
 
     int takePot() {

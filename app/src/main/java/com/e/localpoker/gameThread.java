@@ -46,10 +46,14 @@ public class gameThread extends HandlerThread {
                             resetUICards();
                             int startingPlayer = hgm.blinds();
                             hgm.initialDeal();
-                            uiHandler.post(new addCardRunnable(hgm.players[0].getHand()[0].getIndex()));
-                            uiHandler.post(new addCardRunnable(hgm.players[1].getHand()[1].getIndex()));
                             int j = startingPlayer;
                             while (i < 5) {
+                                updateUIData(true);
+                                resetUICards();
+                                for (Card card : hgm.players[0].getHand())
+                                    if (card != null) {
+                                        uiHandler.post(new addCardRunnable(card.getIndex()));
+                                    }
                                 if (j < hgm.numPlayers) {
                                     if (!hgm.players[j].folded) {
                                         if (hgm.players[j].allIn) {
@@ -60,6 +64,7 @@ public class gameThread extends HandlerThread {
                                                 move = hgm.players[j].requestMove(hgm.callAmount);
                                                 if (!move.equals("")) {
                                                     hgm.receiveCommand(move, j);
+                                                    updatePlayerInfo(j, move, true);
                                                     break;
                                                 }
                                             }
@@ -213,7 +218,6 @@ public class gameThread extends HandlerThread {
     }
 
     private class addCardRunnable implements Runnable {
-
         int index;
         addCardRunnable(int i) {
             this.index = i;
@@ -239,7 +243,7 @@ public class gameThread extends HandlerThread {
         }
     }
 
-    private void updatePlayerInfo(int index, String message, final boolean host) {
+    private void updatePlayerInfo(int index, String message, boolean host) {
         char type = message.charAt(0);
         if (!host) {
             switch (type) {
@@ -276,13 +280,17 @@ public class gameThread extends HandlerThread {
                     break;
             }
         }
+        updateUIData(host);
+
+    }
+
+    private void updateUIData(final boolean host) {
         uiHandler.post(new Runnable() {
             @Override
             public void run() {
                 activity.updateInfo(host);
             }
         });
-
     }
 
 
