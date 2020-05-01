@@ -120,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
             ready = true;
             hostButton.setText("Start");
             clientButton.setVisibility(View.INVISIBLE);
+            pleaseWait.setText("Joined Players:");
+            pleaseWait.setVisibility(View.VISIBLE);
         } else if (type == 2) {
             hostButton.setVisibility(View.INVISIBLE);
             clientButton.setVisibility(View.INVISIBLE);

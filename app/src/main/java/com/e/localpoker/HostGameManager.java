@@ -184,7 +184,7 @@ public class HostGameManager extends Service implements Parcelable {
     }
 
     void updateClientPlayerInfo(int index, String message) {
-        for (int i = 0; i < numPlayers; i++) {
+        for (int i = 1; i < numPlayers; i++) {
             try {
                 players[i].playerOutput.writeByte(index + 10);
                 players[i].playerOutput.writeUTF(message);

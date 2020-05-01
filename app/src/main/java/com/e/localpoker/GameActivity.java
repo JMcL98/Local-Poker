@@ -24,7 +24,7 @@ public class GameActivity extends AppCompatActivity {
     EditText raiseAmount;
     Button callButton, raiseButton, foldButton;
     TextView currentBet, chipsInPlay, totalChips;
-    LinearLayout hand, comCards;
+    LinearLayout hand, comCards, commands;
     private String bufferedAction;
     int numCardsInPlay;
 
@@ -41,6 +41,7 @@ public class GameActivity extends AppCompatActivity {
         raiseAmount = (EditText) findViewById(R.id.raiseAmount);
         hand = (LinearLayout) findViewById(R.id.hand);
         comCards = (LinearLayout) findViewById(R.id.communityCards);
+        commands = (LinearLayout) findViewById(R.id.linearLayout2);
         numCardsInPlay = 0;
         bufferedAction = "";
         gameThread = new gameThread(this, new Handler());
@@ -102,33 +103,26 @@ public class GameActivity extends AppCompatActivity {
     }
 
     String getBufferedAction(int minRaise) {
-        callButton.setVisibility(View.VISIBLE);
-        raiseButton.setVisibility(View.VISIBLE);
-        foldButton.setVisibility(View.VISIBLE);
-        while (true) {
-            if (!bufferedAction.equals("")) {
-                if (bufferedAction.charAt(0) == 'r') {
-                    if (Integer.parseInt(bufferedAction.substring(1)) < minRaise) {
-                        Toast toast = Toast.makeText(this, "Raise Amount too Low", Toast.LENGTH_SHORT);
-                        toast.show();
-                    } else {
-                        String temp = bufferedAction;
-                        bufferedAction = "";
-                        callButton.setVisibility(View.INVISIBLE);
-                        raiseButton.setVisibility(View.INVISIBLE);
-                        foldButton.setVisibility(View.INVISIBLE);
-                        return temp;
-                    }
+        //commands.setVisibility(View.VISIBLE);
+        if (!bufferedAction.equals("")) {
+            if (bufferedAction.charAt(0) == 'r') {
+                if (Integer.parseInt(bufferedAction.substring(1)) < minRaise) {
+                    Toast toast = Toast.makeText(this, "Raise Amount too Low", Toast.LENGTH_SHORT);
+                    toast.show();
                 } else {
                     String temp = bufferedAction;
                     bufferedAction = "";
-                    callButton.setVisibility(View.INVISIBLE);
-                    raiseButton.setVisibility(View.INVISIBLE);
-                    foldButton.setVisibility(View.INVISIBLE);
+                   // commands.setVisibility(View.INVISIBLE);
                     return temp;
                 }
+            } else {
+                String temp = bufferedAction;
+                bufferedAction = "";
+               // commands.setVisibility(View.VISIBLE);
+                return temp;
             }
         }
+        return "";
     }
 
     void updateInfo(boolean host) { // so it knows which manager to take information from

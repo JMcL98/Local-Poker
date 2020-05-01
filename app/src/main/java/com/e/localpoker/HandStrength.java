@@ -123,7 +123,6 @@ final class HandStrength {
     }
 
     private static int checkFourOfAKind(Card[] hand) {
-
         int i = 0;
         int numMatches = 1;
         while (i < 4) {

@@ -15,6 +15,7 @@
         android:layout_marginBottom="16dp"
         android:gravity="center_horizontal|center_vertical"
         android:orientation="horizontal"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content"
             android:onClick="onCall"
             android:text="Call"
-            android:visibility="invisible"
+            android:visibility="visible"
             tools:layout_editor_absoluteX="-10dp"
             tools:layout_editor_absoluteY="588dp" />
 
@@ -35,7 +36,7 @@
             android:layout_height="wrap_content"
             android:onClick="onRaise"
             android:text="Raise"
-            android:visibility="invisible"
+            android:visibility="visible"
             tools:layout_editor_absoluteX="14dp"
             tools:layout_editor_absoluteY="595dp" />
 
@@ -45,7 +46,7 @@
             android:layout_height="wrap_content"
             android:onClick="onFold"
             android:text="Fold"
-            android:visibility="invisible"
+            android:visibility="visible"
             tools:layout_editor_absoluteX="2dp"
             tools:layout_editor_absoluteY="583dp" />
     </LinearLayout>
