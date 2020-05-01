@@ -29,12 +29,14 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout playerList;
     LinearLayout playerList2;
     int numberOfPlayersDisplayed;
+    private boolean ready;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         numberOfPlayersDisplayed = 0;
+        this.ready = false;
         e1 = (EditText) findViewById(R.id.editText);
         playerList = (LinearLayout) findViewById(R.id.listOfPlayers);
         playerList2 = (LinearLayout) findViewById(R.id.listOfPlayers2);
@@ -43,20 +45,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onHostClick(View v) {
-        String dName = e1.getText().toString();
-        acceptedPlayer(dName);
-        if (dName.equals("Name")) {
-            Toast toast = Toast.makeText(this, "Please input a name", Toast.LENGTH_SHORT);
-            toast.show();
+        if (!ready) {
+            String dName = e1.getText().toString();
+            acceptedPlayer(dName);
+            if (dName.equals("Name")) {
+                Toast toast = Toast.makeText(this, "Please input a name", Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
+                hgm = new HostGameManager(deckManager, this, dName);
+                Bundle hostBundle = new Bundle();
+                hostBundle.putParcelable("hostmanager", hgm);
+                Message hostMessage = Message.obtain();
+                hostMessage.setData(hostBundle);
+                hostMessage.what = 1;
+                hthread1.getHandler().sendMessage(hostMessage);
+                prepGame(1);
+            }
         } else {
-            hgm = new HostGameManager(deckManager, this, dName);
             Bundle hostBundle = new Bundle();
-            hostBundle.putParcelable("hostmanager", hgm);
-            Message hostMessage = Message.obtain();
-            hostMessage.setData(hostBundle);
-            hostMessage.what = 1;
-            hthread1.getHandler().sendMessage(hostMessage);
-            prepGame(1);
+            hostBundle.putParcelable("manager", hgm);
+            hostBundle.putBoolean("type", true);
+            hgm.hostObj.acceptingPlayers = false;
+            gameLaunch(hostBundle);
         }
     }
 
@@ -78,13 +88,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onClickStart(View v) {
-        Bundle hostBundle = new Bundle();
-        hostBundle.putParcelable("manager", hgm);
-        hostBundle.putBoolean("type", true);
-        hgm.hostObj.acceptingPlayers = false;
-        gameLaunch(hostBundle);
-    }
 
     public void clientStart() {
         Bundle clientBundle = new Bundle();
@@ -102,12 +105,11 @@ public class MainActivity extends AppCompatActivity {
     public void prepGame(int type) {
         Button hostButton = (Button) findViewById(R.id.button);
         Button clientButton = (Button) findViewById(R.id.button2);
-        Button startButton = (Button) findViewById(R.id.startButton);
         TextView pleaseWait = (TextView) findViewById(R.id.textView);
         if (type == 1) {
-            hostButton.setVisibility(View.INVISIBLE);
+            ready = true;
+            hostButton.setText("Start");
             clientButton.setVisibility(View.INVISIBLE);
-            startButton.setVisibility(View.VISIBLE);
         } else if (type == 2) {
             hostButton.setVisibility(View.INVISIBLE);
             clientButton.setVisibility(View.INVISIBLE);

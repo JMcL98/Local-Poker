@@ -105,22 +105,26 @@ public class HostGameManager extends Service implements Parcelable {
     }
 
     void receiveCommand(String reply, int playerIndex) {
-        switch (reply) {
-            case "call":
+        char type = reply.charAt(0);
+        switch (type) {
+            case 'c':
                 players[playerIndex].addChipsInPlay(callAmount - players[playerIndex].chipsInPlay);
                 playersCalled++;
                 updateClientPlayerInfo(playerIndex, "c");
                 break;
-            case "raise":
-                players[playerIndex].addChipsInPlay((callAmount * 2) - players[playerIndex].chipsInPlay); // double current call
+            case 'r':
+                players[playerIndex].addChipsInPlay((Integer.parseInt(reply.substring(1))) - players[playerIndex].chipsInPlay); // double current call
                 playersCalled = 1;
-                updateClientPlayerInfo(playerIndex, "r" + (callAmount * 2));
+                updateClientPlayerInfo(playerIndex, "r" + (reply.substring(1)));
                 break;
-            case "fold":
+            case 'f':
                 players[playerIndex].fold();
                 playersInPlay--;
                 updateClientPlayerInfo(playerIndex, "f");
                 break;
+        }
+        if (!players[playerIndex].folded && players[playerIndex].getChips() == 0) {
+            players[playerIndex].allIn = true;
         }
     }
 
@@ -197,6 +201,7 @@ public class HostGameManager extends Service implements Parcelable {
         for (Player player : players) {
             player.resetHand();
             player.unFold();
+            player.allIn = false;
         }
         Arrays.fill(communityCards, null);
         dm.resetDeck();

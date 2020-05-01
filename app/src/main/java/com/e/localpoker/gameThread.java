@@ -41,7 +41,11 @@ public class gameThread extends HandlerThread {
                             while (i < 5) {
                                 if (j < hgm.numPlayers) {
                                     if (!hgm.players[j].folded) {
-                                        hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
+                                        if (!hgm.players[j].allIn) {
+                                            hgm.playersCalled++;
+                                        } else {
+                                            hgm.receiveCommand(hgm.players[j].requestMove(hgm.callAmount), j);
+                                        }
                                     }
                                     j++;
                                 } else {
@@ -98,6 +102,7 @@ public class gameThread extends HandlerThread {
                                                     if (cgm.callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
                                                         activity.callButton.setText("Check");
                                                     }
+                                                    activity.raiseAmount.setText(cgm.callAmount);
                                                 }
                                             });
                                             cgm.reply(activity.getBufferedAction());

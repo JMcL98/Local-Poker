@@ -16,6 +16,7 @@ class Player {
     private Card[] hand;
     private int numCardsInHand;
     boolean folded;
+    boolean allIn;
     boolean eliminated;
     Socket clientSocket;
     DataOutputStream playerOutput;
@@ -38,6 +39,7 @@ class Player {
         numCardsInHand = 0;
         folded = false;
         eliminated = false;
+        allIn = false;
         hand = new Card[7];
         resetHand();
     }

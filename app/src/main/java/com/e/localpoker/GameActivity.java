@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity {
@@ -16,7 +17,7 @@ public class GameActivity extends AppCompatActivity {
     boolean host; // true = host, false = client
     int myIndex;
     gameThread gameThread;
-    TextView tv;
+    EditText raiseAmount;
     Button callButton, raiseButton, foldButton;
     TextView currentBet, chipsInPlay, totalChips;
     private String bufferedAction;
@@ -31,6 +32,7 @@ public class GameActivity extends AppCompatActivity {
         currentBet = (TextView) findViewById(R.id.currentBet);
         chipsInPlay = (TextView) findViewById(R.id.chipsInPlay);
         totalChips = (TextView) findViewById(R.id.myChips);
+        raiseAmount = (EditText) findViewById(R.id.raiseAmount);
         bufferedAction = "";
         gameThread = new gameThread(this, new Handler());
         gameThread.start();
@@ -60,15 +62,15 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void onCall(View v) {
-        bufferedAction = "call";
+        bufferedAction = "c";
     }
 
     public void onRaise(View v) {
-        bufferedAction = "raise";
+        bufferedAction = "r" + raiseAmount.getText();
     }
 
     public void onFold(View v) {
-        bufferedAction = "fold";
+        bufferedAction = "f";
     }
 
     String getBufferedAction() {
