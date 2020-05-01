@@ -123,4 +123,15 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"></LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/communityCards"
+        android:layout_width="384dp"
+        android:layout_height="129dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/hand"
+        app:layout_constraintStart_toStartOf="parent"></LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
