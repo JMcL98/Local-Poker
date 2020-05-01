@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -66,25 +67,39 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void onRaise(View v) {
-        bufferedAction = "r" + raiseAmount.getText();
+        bufferedAction = "r" + raiseAmount.getText().toString();
     }
 
     public void onFold(View v) {
         bufferedAction = "f";
     }
 
-    String getBufferedAction() {
+    String getBufferedAction(int minRaise) {
         callButton.setVisibility(View.VISIBLE);
         raiseButton.setVisibility(View.VISIBLE);
         foldButton.setVisibility(View.VISIBLE);
         while (true) {
             if (!bufferedAction.equals("")) {
-                String temp = bufferedAction;
-                bufferedAction = "";
-                callButton.setVisibility(View.INVISIBLE);
-                raiseButton.setVisibility(View.INVISIBLE);
-                foldButton.setVisibility(View.INVISIBLE);
-                return temp;
+                if (bufferedAction.charAt(0) == 'r') {
+                    if (Integer.parseInt(bufferedAction.substring(1)) < minRaise) {
+                        Toast toast = Toast.makeText(this, "Raise Amount too Low", Toast.LENGTH_SHORT);
+                        toast.show();
+                    } else {
+                        String temp = bufferedAction;
+                        bufferedAction = "";
+                        callButton.setVisibility(View.INVISIBLE);
+                        raiseButton.setVisibility(View.INVISIBLE);
+                        foldButton.setVisibility(View.INVISIBLE);
+                        return temp;
+                    }
+                } else {
+                    String temp = bufferedAction;
+                    bufferedAction = "";
+                    callButton.setVisibility(View.INVISIBLE);
+                    raiseButton.setVisibility(View.INVISIBLE);
+                    foldButton.setVisibility(View.INVISIBLE);
+                    return temp;
+                }
             }
         }
     }
