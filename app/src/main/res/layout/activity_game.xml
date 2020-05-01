@@ -116,23 +116,75 @@
 
     <LinearLayout
         android:id="@+id/hand"
-        android:layout_width="188dp"
-        android:layout_height="152dp"
+        android:layout_width="190dp"
+        android:layout_height="102dp"
         android:layout_marginEnd="11dp"
         android:layout_marginBottom="9dp"
-        android:gravity="bottom|center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
-        app:layout_constraintEnd_toEndOf="parent"></LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/hand0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/bg" />
+
+        <ImageView
+            android:id="@+id/hand1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/bg" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/communityCards"
         android:layout_width="384dp"
         android:layout_height="129dp"
         android:layout_marginStart="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="24dp"
         android:gravity="left|center_vertical"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/hand"
-        app:layout_constraintStart_toStartOf="parent"></LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/card0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/bg" />
+
+        <ImageView
+            android:id="@+id/card1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/bg" />
+
+        <ImageView
+            android:id="@+id/card2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/bg" />
+
+        <ImageView
+            android:id="@+id/card3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/bg" />
+
+        <ImageView
+            android:id="@+id/card4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/bg" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

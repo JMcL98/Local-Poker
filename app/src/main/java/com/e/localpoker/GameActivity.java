@@ -26,6 +26,7 @@ public class GameActivity extends AppCompatActivity {
     TextView currentBet, chipsInPlay, totalChips;
     LinearLayout hand, comCards, commands;
     private String bufferedAction;
+    ImageView hand0, hand1, card0, card1, card2, card3, card4;
     int numCardsInPlay;
 
     @Override
@@ -40,6 +41,13 @@ public class GameActivity extends AppCompatActivity {
         totalChips = (TextView) findViewById(R.id.myChips);
         raiseAmount = (EditText) findViewById(R.id.raiseAmount);
         hand = (LinearLayout) findViewById(R.id.hand);
+        hand0 = (ImageView) findViewById(R.id.hand0);
+        hand1 = (ImageView) findViewById(R.id.hand1);
+        card0 = (ImageView) findViewById(R.id.card0);
+        card1 = (ImageView) findViewById(R.id.card1);
+        card2 = (ImageView) findViewById(R.id.card2);
+        card3 = (ImageView) findViewById(R.id.card3);
+        card4 = (ImageView) findViewById(R.id.card4);
         comCards = (LinearLayout) findViewById(R.id.communityCards);
         commands = (LinearLayout) findViewById(R.id.linearLayout2);
         numCardsInPlay = 0;
@@ -78,16 +86,48 @@ public class GameActivity extends AppCompatActivity {
     }
 
     void resetCards() {
-        hand.removeAllViewsInLayout();
-        comCards.removeAllViewsInLayout();
+        hand0.setImageResource(R.drawable.bg);
+        hand1.setImageResource(R.drawable.bg);
+        card0.setImageResource(R.drawable.bg);
+        card1.setImageResource(R.drawable.bg);
+        card2.setImageResource(R.drawable.bg);
+        card3.setImageResource(R.drawable.bg);
+        card4.setImageResource(R.drawable.bg);
+        numCardsInPlay = 0;
     }
 
     void addCard(int index) {
-        if (numCardsInPlay < 2) {
+        switch (numCardsInPlay) {
+            case (0) :
+                getCardImage(index, hand0);
+                break;
+            case (1) :
+                getCardImage(index, hand1);
+                break;
+            case (2) :
+                getCardImage(index, card0);
+                break;
+            case (3) :
+                getCardImage(index, card1);
+                break;
+            case (4) :
+                getCardImage(index, card2);
+                break;
+            case (5) :
+                getCardImage(index, card3);
+                break;
+            case (6) :
+                getCardImage(index, card4);
+                break;
+        }
+        numCardsInPlay++;
+
+
+      /*  if (numCardsInPlay < 2) {
             hand.addView(getCardImage(index));
         } else {
             comCards.addView(getCardImage(index));
-        }
+        }*/
     }
 
     public void onCall(View v) {
@@ -143,8 +183,8 @@ public class GameActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    ImageView getCardImage (int index) {
-        ImageView img = new ImageView(this);
+    void getCardImage (int index, ImageView img) {
+        //ImageView img = new ImageView(this);
         switch (index) {
             case (0) :
                 img.setImageResource(R.drawable.c1);
@@ -303,6 +343,6 @@ public class GameActivity extends AppCompatActivity {
                 img.setImageResource(R.drawable.c52);
                 break;
         }
-        return img;
+        //return img;
     }
 }

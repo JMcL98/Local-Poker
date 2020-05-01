@@ -43,8 +43,11 @@ public class gameThread extends HandlerThread {
                         int i = 1;
                         Log.d("Jordan", "Game Started");
                         while (i > 0) {
+                            resetUICards();
                             int startingPlayer = hgm.blinds();
                             hgm.initialDeal();
+                            uiHandler.post(new addCardRunnable(hgm.players[0].getHand()[0].getIndex()));
+                            uiHandler.post(new addCardRunnable(hgm.players[1].getHand()[1].getIndex()));
                             int j = startingPlayer;
                             while (i < 5) {
                                 if (j < hgm.numPlayers) {
@@ -140,15 +143,11 @@ public class gameThread extends HandlerThread {
                                             });*/
                                             break;
                                         case (4) :
-                                            final int cardI = Integer.parseInt(cgm.clientInput.readUTF());
-                                            uiHandler.post(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    cgm.addCard(cardI);
-                                                }
-                                            });
+                                            int cardI = Integer.parseInt(cgm.clientInput.readUTF());
+                                            uiHandler.post(new addCardRunnable(cardI));
                                             break;
                                         case (5) :
+                                            resetUICards();
                                             cgm.players[cgm.myPlayerIndex].resetHand();
                                             // more
                                             break;
@@ -210,6 +209,33 @@ public class gameThread extends HandlerThread {
                     break;
                 }
             }
+        }
+    }
+
+    private class addCardRunnable implements Runnable {
+
+        int index;
+        addCardRunnable(int i) {
+            this.index = i;
+        }
+        @Override
+        public void run() {
+            if (cgm != null) {
+                cgm.addCard(index);
+            } else {
+                activity.addCard(this.index);
+            }
+        }
+    }
+
+    private void resetUICards() {
+        uiHandler.post(new resetCards());
+    }
+
+    private class resetCards implements Runnable {
+        @Override
+        public void run() {
+            activity.resetCards();
         }
     }
 
