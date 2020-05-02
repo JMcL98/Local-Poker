@@ -205,17 +205,9 @@ public class HostGameManager extends Service implements Parcelable {
         callAmount = 0;
         switch (gameStage) {
             case (2) :
-               // try {
-                    dealCommunityCard(0);
-                   // Thread.sleep(100);
-                    dealCommunityCard(1);
-                    //Thread.sleep(100);
-                    dealCommunityCard(2);
-                   // Thread.sleep(100);
-                //} catch (InterruptedException e) {
-                //    e.printStackTrace();
-                //}
-
+                dealCommunityCard(0);
+                dealCommunityCard(1);
+                dealCommunityCard(2);
                 break;
             case (3) :
                 dealCommunityCard(3);
@@ -327,7 +319,6 @@ public class HostGameManager extends Service implements Parcelable {
         for (Player player : players) {
             if (!player.eliminated) {
                 player.addCard(dm.dealCard(60));
-                Thread.sleep(100);
                 player.addCard(dm.dealCard(60));
             }
         }

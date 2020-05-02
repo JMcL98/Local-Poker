@@ -63,11 +63,6 @@ public class gameThread extends HandlerThread {
                                         if (hgm.players[j].allIn) {
                                             hgm.playersCalled++;
                                         } else {
-                                            try {
-                                                Thread.sleep(150);
-                                            } catch (InterruptedException e) {
-                                                e.printStackTrace();
-                                            }
                                             String move;
                                             while (true) {
                                                 move = hgm.players[j].requestMove(hgm.callAmount);
@@ -131,6 +126,7 @@ public class gameThread extends HandlerThread {
                                             break;
                                         case (3) :
                                             cgm.callAmount = Integer.parseInt(cgm.clientInput.readUTF());
+                                            updateUIData(false);
                                             /*uiHandler.post(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -158,7 +154,12 @@ public class gameThread extends HandlerThread {
                                             break;
                                         case (4) :
                                             int cardI = Integer.parseInt(cgm.clientInput.readUTF());
-                                            uiHandler.post(new addCardRunnable(cardI, cgm.players[cgm.myPlayerIndex].getNumCardsInHand()));
+                                            cgm.addCard(cardI, cgm.players[cgm.myPlayerIndex].getNumCardsInHand());
+                                            for (int c = 0; c < cgm.players[cgm.myPlayerIndex].getHand().length; c++) {
+                                                if (cgm.players[cgm.myPlayerIndex].getHand()[c] != null) {
+                                                    uiHandler.post(new addCardRunnable(cgm.players[cgm.myPlayerIndex].getHand()[c].getIndex(), c));
+                                                }
+                                            }
                                             break;
                                         case (5) :
                                             resetUICards();
@@ -235,11 +236,11 @@ public class gameThread extends HandlerThread {
         }
         @Override
         public void run() {
-            if (cgm != null) {
-                cgm.addCard(this.index, this.cardNum);
-            } else {
+            //if (cgm != null) {
+            //    cgm.addCard(this.index, this.cardNum);
+           // } else {
                 activity.addCard(this.index, this.cardNum);
-            }
+           // }
         }
     }
 

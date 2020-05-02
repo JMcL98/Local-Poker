@@ -109,7 +109,7 @@ public class ClientGameManager extends Service implements Parcelable {
 
     void addCard(int index, int cardNum) {
         players[myPlayerIndex].addCard(dm.dealSpecificCard(index));
-        gameActivity.addCard(index, cardNum);
+//        gameActivity.addCard(index, cardNum);
     }
 
     void setGameActivity(GameActivity gameActivity) {
