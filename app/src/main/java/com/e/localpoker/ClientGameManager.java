@@ -31,6 +31,7 @@ public class ClientGameManager extends Service implements Parcelable {
     Player[] players;
     int myPlayerIndex;
     int callAmount;
+    int chipsInPlay;
     int totalPot;
     int smallBlind;
     int bigBlind;
@@ -127,6 +128,11 @@ public class ClientGameManager extends Service implements Parcelable {
 
     void addCard(int index, int cardNum) {
         players[myPlayerIndex].addCard(dm.dealSpecificCard(index));
+        if (players[myPlayerIndex].r) {
+            callAmount = 0;
+            players[myPlayerIndex].r = false;
+        }
+
 //        gameActivity.addCard(index, cardNum);
     }
 

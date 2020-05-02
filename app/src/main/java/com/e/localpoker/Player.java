@@ -18,6 +18,7 @@ class Player {
     boolean folded;
     boolean allIn;
     boolean eliminated;
+    boolean r;
     DataOutputStream playerOutput;
     DataInputStream playerInput;
     Socket socket;
@@ -35,6 +36,7 @@ class Player {
             this.playerInput = null;
         }
         chips = 0;
+        r = false;
         chipsInPlay = 0;
         numCardsInHand = 0;
         folded = false;
@@ -103,6 +105,10 @@ class Player {
 
     void addCard(Card newCard) {
         if (numCardsInHand < 7) {
+            if (numCardsInHand > 3) {
+                chipsInPlay = 0;
+                r = true;
+            }
             hand[numCardsInHand] = newCard;
             if (playerOutput != null) {
                 try {

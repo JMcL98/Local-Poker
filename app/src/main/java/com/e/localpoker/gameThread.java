@@ -94,6 +94,12 @@ public class gameThread extends HandlerThread {
                                 i = 0;
                             } else {
                                 i = 1;
+                                hgm.resetRound();
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }
@@ -140,19 +146,23 @@ public class gameThread extends HandlerThread {
                                             break;
                                         case (3) :
                                             int temp = Integer.parseInt(cgm.clientInput.readUTF());
-                                            if (temp <= cgm.callAmount) {
-                                                cgm.players[cgm.myPlayerIndex].chipsInPlay = 0;
-                                            }
+                                            //if (temp <= cgm.callAmount) {
+                                             //   cgm.players[activity.myIndex].chipsInPlay = 0;
+                                          //  }
                                             cgm.callAmount = temp;
-                                            /*uiHandler.post(new Runnable() {
+                                            uiHandler.post(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    if (cgm.callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
-                                                        activity.callButton.setText("Check");
+                                                   // if (cgm.callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
+                                                   //     activity.callButton.setText("Check");
+                                                   // }
+                                                    if (cgm.callAmount > 0) {
+                                                        activity.raiseAmount.setText("" + (cgm.callAmount * 2));
+                                                    } else {
+                                                        activity.raiseAmount.setText("" + 10);
                                                     }
-                                                    activity.raiseAmount.setText(cgm.callAmount);
                                                 }
-                                            });*/
+                                            });
                                             while (true) {
                                                 String move = activity.getBufferedAction(cgm.callAmount);
                                                 if (!move.equals("")) {
@@ -160,14 +170,13 @@ public class gameThread extends HandlerThread {
                                                     break;
                                                 }
                                             }
-                                       /*     uiHandler.post(new Runnable() {
+                                           /* uiHandler.post(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    if (cgm.callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
-                                                        activity.callButton.setText("Call");
-                                                    }
+                                                    activity.callButton.setText("Call");
                                                 }
                                             });*/
+                                            //cgm.chipsInPlay = cgm.players[cgm.myPlayerIndex].chipsInPlay;
                                             break;
                                         case (4) :
                                             int cardI = Integer.parseInt(cgm.clientInput.readUTF());
@@ -177,6 +186,7 @@ public class gameThread extends HandlerThread {
                                                     uiHandler.post(new addCardRunnable(cgm.players[cgm.myPlayerIndex].getHand()[c].getIndex(), c));
                                                 }
                                             }
+                                            updateUIData(false);
                                             break;
                                         case (5) :
                                             resetUICards();
@@ -309,21 +319,23 @@ public class gameThread extends HandlerThread {
                     break;
             }
         } else {
-            switch (type) {
-                case ('c'):
-                    hgm.players[index].chipsInPlay = (hgm.callAmount - hgm.players[index].chipsInPlay);
-                    break;
-                case ('r'):
-                    int raiseAmount = Integer.parseInt(message.substring(1));
-                    hgm.players[index].chipsInPlay = (raiseAmount);
-                    hgm.callAmount = raiseAmount;
-                    break;
-                case ('f'):
-                    hgm.players[index].fold();
-                    break;
-                case ('e'):
-                    hgm.players[index].eliminated = true;
-                    break;
+            if (index > 0) {
+                switch (type) {
+                    case ('c'):
+                        hgm.players[index].chipsInPlay = (hgm.callAmount - hgm.players[index].chipsInPlay);
+                        break;
+                    case ('r'):
+                        int raiseAmount = Integer.parseInt(message.substring(1));
+                        hgm.players[index].chipsInPlay = (raiseAmount);
+                        hgm.callAmount = raiseAmount;
+                        break;
+                    case ('f'):
+                        hgm.players[index].fold();
+                        break;
+                    case ('e'):
+                        hgm.players[index].eliminated = true;
+                        break;
+                }
             }
         }
         updateUIData(host);

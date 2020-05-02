@@ -180,6 +180,7 @@ public class HostGameManager extends Service implements Parcelable {
                 players[playerIndex].addChipsInPlay((Integer.parseInt(reply.substring(1))) - players[playerIndex].chipsInPlay); // double current call
                 playersCalled = 1;
                 updateClientPlayerInfo(playerIndex, "r" + (reply.substring(1)));
+                callAmount = Integer.parseInt(reply.substring(1));
                 break;
             case 'f':
                 players[playerIndex].fold();
@@ -291,7 +292,6 @@ public class HostGameManager extends Service implements Parcelable {
             }
 
         }
-        resetRound();
     }
 
     void resetRound() {
