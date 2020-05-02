@@ -219,7 +219,11 @@ public class HostGameManager extends Service implements Parcelable {
 
     void advanceStage() {
         for (Player player : players) {
-            addToPot(player.chipsInPlay);
+            if (!player.folded) {
+                addToPot(callAmount);
+            } else {
+                addToPot(player.chipsInPlay);
+            }
             player.chipsInPlay = 0;
         }
         gameStage++;
@@ -308,8 +312,10 @@ public class HostGameManager extends Service implements Parcelable {
                 if (!players[i].eliminated) {
                     if (i == dealerIndex) {
                         players[i].addChipsInPlay(bigBlind);
+                        updateClientPlayerInfo(i, "b");
                     } else {
                         players[i].addChipsInPlay(smallBlind);
+                        updateClientPlayerInfo(i, "s");
                         temp = i;
                     }
                 }

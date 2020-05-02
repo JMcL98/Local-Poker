@@ -78,12 +78,12 @@ public class gameThread extends HandlerThread {
                                 } else {
                                     j = 0;
                                 }
-                                hgm.updateClientPotInfo();
                                 if (hgm.playersInPlay == hgm.playersCalled) {
                                     i++;
                                     hgm.advanceStage();
                                     j = startingPlayer;
                                 }
+                                hgm.updateClientPotInfo();
                             }
                             if (hgm.playersLeft == 1) {
                                 i = 0;
@@ -177,6 +177,7 @@ public class gameThread extends HandlerThread {
                                             break;
                                         case (7) :
                                             cgm.totalPot = Integer.parseInt(cgm.clientInput.readUTF());
+                                            updateUIData(false);
                                             break;
                                         case (9) :
                                             String playersMessage = cgm.clientInput.readUTF();

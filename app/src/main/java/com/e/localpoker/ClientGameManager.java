@@ -55,6 +55,8 @@ public class ClientGameManager extends Service implements Parcelable {
         this.dm = new DeckManager();
         this.callAmount = 0;
         this.totalPot = 0;
+        this.smallBlind = 10;
+        this.bigBlind = 20;
     }
 
     protected ClientGameManager(Parcel in) {

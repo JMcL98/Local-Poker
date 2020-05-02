@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".GameActivity">
 
+    <EditText
+        android:id="@+id/raiseAmount"
+        android:layout_width="85dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="164dp"
+        android:layout_marginEnd="164dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="384dp"
@@ -90,34 +102,13 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="85dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="163dp"
-        android:layout_marginEnd="163dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <EditText
-            android:id="@+id/raiseAmount"
-            android:layout_width="86dp"
-            android:layout_height="37dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            tools:layout_editor_absoluteX="96dp" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/hand"
         android:layout_width="190dp"
         android:layout_height="102dp"
         android:layout_marginEnd="11dp"
-        android:layout_marginBottom="9dp"
+        android:layout_marginBottom="2dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+        app:layout_constraintBottom_toTopOf="@+id/raiseAmount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/linearLayout3">
 
