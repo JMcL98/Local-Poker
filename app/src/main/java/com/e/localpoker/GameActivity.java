@@ -24,6 +24,7 @@ public class GameActivity extends AppCompatActivity {
     EditText raiseAmount;
     Button callButton, raiseButton, foldButton;
     TextView currentBet, chipsInPlay, totalChips, pot;
+    TextView[] players;
     LinearLayout hand, comCards, commands;
     private String bufferedAction;
     private String[] names;
@@ -40,6 +41,10 @@ public class GameActivity extends AppCompatActivity {
         currentBet = (TextView) findViewById(R.id.currentBet);
         chipsInPlay = (TextView) findViewById(R.id.chipsInPlay);
         totalChips = (TextView) findViewById(R.id.myChips);
+        players = new TextView[3];
+        players[0] = (TextView) findViewById(R.id.player0);
+        players[1] = (TextView) findViewById(R.id.player1);
+        players[2] = (TextView) findViewById(R.id.player2);
         pot = (TextView) findViewById(R.id.pot);
         raiseAmount = (EditText) findViewById(R.id.raiseAmount);
         hand = (LinearLayout) findViewById(R.id.hand);
@@ -74,8 +79,23 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    void setPlayerNames(String[] names) {
+    void setPlayerNames(String[] names, boolean host) {
         this.names = names;
+        if (host) {
+            for (int i = 0; i < hgm.numPlayers; i++) {
+                players[i].setText(names[i]);
+            }
+        } else {
+            for (int j = 0; j < cgm.players.length; j++) {
+                players[j].setText(names[j]);
+            }
+        }
+    }
+
+    void updatePlayerInfo(Player[] players) {
+        for (int i = 0; i < hgm.numPlayers; i++) {
+            this.players[i].setText(players[i].getPlayerName() + "\n" + "Total Chips: " + players[i].getChips() + "\n" + "Chips in Play: " + players[i].chipsInPlay);
+        }
     }
 
     void setMyIndex(int i) {

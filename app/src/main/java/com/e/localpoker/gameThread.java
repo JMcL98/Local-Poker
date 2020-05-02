@@ -43,7 +43,7 @@ public class gameThread extends HandlerThread {
                         for (int i = 0; i < names.length; i++) {
                             names[i] = hgm.players[i].getPlayerName();
                         }
-                        activity.setPlayerNames(names);
+                        activity.setPlayerNames(names, true);
                         hgm.resetRound();
                         int i = 1;
                         Log.d("Jordan", "Game Started");
@@ -58,6 +58,7 @@ public class gameThread extends HandlerThread {
                             int j = startingPlayer;
                             while (i < 5) {
                                 updateUIData(true);
+                                uiHandler.post(new updateGameInfo(hgm.players));
                                 for (int c = 0; c < hgm.players[0].getHand().length; c++) {
                                     if (hgm.players[0].getHand()[c] != null) {
                                         uiHandler.post(new addCardRunnable(hgm.players[0].getHand()[c].getIndex(), c));
@@ -69,6 +70,21 @@ public class gameThread extends HandlerThread {
                                             hgm.playersCalled++;
                                         } else {
                                             String move;
+                                            if (j == 0) {
+                                                uiHandler.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        // if (cgm.callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
+                                                        //     activity.callButton.setText("Check");
+                                                        // }
+                                                        if (hgm.callAmount > 0) {
+                                                            activity.raiseAmount.setText("" + (hgm.callAmount * 2));
+                                                        } else {
+                                                            activity.raiseAmount.setText("" + 10);
+                                                        }
+                                                    }
+                                                });
+                                            }
                                             while (true) {
                                                 move = hgm.players[j].requestMove(hgm.callAmount);
                                                 if (!move.equals("")) {
@@ -123,14 +139,20 @@ public class gameThread extends HandlerThread {
                         int j = 1;
                         int check = 1;
                         while (j > 0) {
-                            if (check < 1) {
-                                String[] names2 = new String[cgm.players.length];
+                           /* if (check < 1) {
+                                final String[] names2 = new String[cgm.players.length];
                                 for (int a = 0; a < names2.length; a++) {
-                                    names2[a] = hgm.players[a].getPlayerName();
+                                    names2[a] = cgm.players[a].getPlayerName();
                                 }
-                                activity.setPlayerNames(names2);
+                                uiHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        activity.setPlayerNames(names2, false);
+                                    }
+                                });
+
                                 check = 1;
-                            }
+                            }*/
                             if (cgm.clientInput != null) {
                                 try {
                                     byte msgType = cgm.clientInput.readByte();
@@ -191,6 +213,7 @@ public class gameThread extends HandlerThread {
                                         case (5) :
                                             resetUICards();
                                             cgm.resetHand();
+                                            check = 0;
                                             // more
                                             break;
                                         case (6) :
@@ -222,9 +245,6 @@ public class gameThread extends HandlerThread {
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
-                                                if (playerMessageIndex == (cgm.players.length - 1)) {
-                                                    check = 0;
-                                                }
                                             } else {
                                                 updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
                                             }
@@ -347,9 +367,24 @@ public class gameThread extends HandlerThread {
             @Override
             public void run() {
                 activity.updateInfo(host);
+                if (host) {
+
+                }
 
             }
         });
+    }
+
+    private class updateGameInfo implements Runnable {
+        Player[] players;
+
+        updateGameInfo(Player[] players) {
+            this.players = players;
+        }
+        @Override
+        public void run() {
+            activity.updatePlayerInfo(this.players);
+        }
     }
 
 

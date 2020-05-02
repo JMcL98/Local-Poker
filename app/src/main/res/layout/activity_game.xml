@@ -13,7 +13,8 @@
         android:layout_marginStart="164dp"
         android:layout_marginEnd="164dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
+        android:numeric="integer"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -65,9 +66,9 @@
 
     <LinearLayout
         android:id="@+id/linearLayout3"
-        android:layout_width="194dp"
-        android:layout_height="108dp"
-        android:layout_marginStart="12dp"
+        android:layout_width="182dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="24dp"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="52dp"
         android:orientation="vertical"
@@ -103,9 +104,9 @@
 
     <LinearLayout
         android:id="@+id/hand"
-        android:layout_width="190dp"
-        android:layout_height="102dp"
-        android:layout_marginEnd="11dp"
+        android:layout_width="167dp"
+        android:layout_height="92dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="2dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/raiseAmount"
@@ -189,4 +190,44 @@
         app:layout_constraintBottom_toTopOf="@+id/communityCards"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/players"
+        android:layout_width="375dp"
+        android:layout_height="164dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="left"
+        android:isScrollContainer="true"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/player0"
+            android:layout_width="29dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/player1"
+            android:layout_width="29dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/player2"
+            android:layout_width="29dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
