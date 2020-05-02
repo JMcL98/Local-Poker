@@ -114,6 +114,7 @@ public class HostGameManager extends Service implements Parcelable {
                 }
             }
         }
+
     }
 
     void sendNames() {
@@ -245,7 +246,7 @@ public class HostGameManager extends Service implements Parcelable {
                 int handStrength = 0;
                 int roundWinner = 0;
                 for (int i = 0; i < players.length; i++) {
-                    if (!players[i].eliminated) {
+                    if (!players[i].eliminated && !players[i].folded) {
                         int newStrength = HandStrength.calculateStrength(players[i].getHand());
                         if (newStrength > handStrength) {
                             roundWinner = i;
@@ -259,6 +260,7 @@ public class HostGameManager extends Service implements Parcelable {
     }
 
     void finishRound(int winningPlayerIndex) {
+        Log.d("Jordan", "Round winner: " + players[winningPlayerIndex].getPlayerName());
         int winningChips = takePot();
         players[winningPlayerIndex].addChips(winningChips);
         updateClientPlayerInfo(winningPlayerIndex, "w" + winningChips);

@@ -85,6 +85,15 @@ public class ClientGameManager extends Service implements Parcelable {
         bigBlind = bigBlind * multiplyValue;
     }
 
+    void resetHand() {
+        for (Player player : players) {
+            player.unFold();
+            player.chipsInPlay = 0;
+        }
+        players[myPlayerIndex].resetHand();
+        callAmount = bigBlind;
+    }
+
     void initialisePlayers(int numPlayers, int myIndex) {
         if (numPlayers == 1) {
             numPlayers = 10;

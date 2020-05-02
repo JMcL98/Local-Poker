@@ -39,6 +39,11 @@ public class gameThread extends HandlerThread {
                         }
                         hgm.players[0].setGameActivity(activity);
                         hgm.sendNames();
+                        String[] names = new String[hgm.numPlayers];
+                        for (int i = 0; i < names.length; i++) {
+                            names[i] = hgm.players[i].getPlayerName();
+                        }
+                        activity.setPlayerNames(names);
                         hgm.resetRound();
                         int i = 1;
                         Log.d("Jordan", "Game Started");
@@ -110,7 +115,16 @@ public class gameThread extends HandlerThread {
                         cgm = new ClientGameManager(MainActivity.clientOutput, MainActivity.clientInput, receivedClientBundle.getString("name"));
                         activity.setClientManager(cgm);
                         int j = 1;
+                        int check = 1;
                         while (j > 0) {
+                            if (check < 1) {
+                                String[] names2 = new String[cgm.players.length];
+                                for (int a = 0; a < names2.length; a++) {
+                                    names2[a] = hgm.players[a].getPlayerName();
+                                }
+                                activity.setPlayerNames(names2);
+                                check = 1;
+                            }
                             if (cgm.clientInput != null) {
                                 try {
                                     byte msgType = cgm.clientInput.readByte();
@@ -166,7 +180,7 @@ public class gameThread extends HandlerThread {
                                             break;
                                         case (5) :
                                             resetUICards();
-                                            cgm.players[cgm.myPlayerIndex].resetHand();
+                                            cgm.resetHand();
                                             // more
                                             break;
                                         case (6) :
@@ -198,6 +212,9 @@ public class gameThread extends HandlerThread {
                                             playerMessageIndex = msgType - 10;
                                             if (cgm.players[playerMessageIndex] == null) {
                                                 cgm.addPlayer(cgm.clientInput.readUTF(), playerMessageIndex);
+                                                if (playerMessageIndex == (cgm.players.length - 1)) {
+                                                    check = 0;
+                                                }
                                             } else {
                                                 updatePlayerInfo(playerMessageIndex, cgm.clientInput.readUTF(), false);
                                             }

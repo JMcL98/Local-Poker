@@ -26,6 +26,7 @@ public class GameActivity extends AppCompatActivity {
     TextView currentBet, chipsInPlay, totalChips, pot;
     LinearLayout hand, comCards, commands;
     private String bufferedAction;
+    private String[] names;
     ImageView hand0, hand1, card0, card1, card2, card3, card4;
     int numCardsInPlay;
 
@@ -71,6 +72,10 @@ public class GameActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    void setPlayerNames(String[] names) {
+        this.names = names;
     }
 
     void setMyIndex(int i) {
