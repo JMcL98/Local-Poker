@@ -78,10 +78,9 @@ public class gameThread extends HandlerThread {
                                 } else {
                                     j = 0;
                                 }
-
+                                hgm.updateClientPotInfo();
                                 if (hgm.playersInPlay == hgm.playersCalled) {
                                     i++;
-                                    resetUICards();
                                     hgm.advanceStage();
                                     j = startingPlayer;
                                 }
@@ -117,6 +116,7 @@ public class gameThread extends HandlerThread {
                                     byte msgType = cgm.clientInput.readByte();
                                     int playerMessageIndex;
                                     int myIndex;
+                                    updateUIData(false);
                                     switch (msgType) {
                                         case (1) :
 
@@ -125,8 +125,11 @@ public class gameThread extends HandlerThread {
                                             // update user values
                                             break;
                                         case (3) :
-                                            cgm.callAmount = Integer.parseInt(cgm.clientInput.readUTF());
-                                            updateUIData(false);
+                                            int temp = Integer.parseInt(cgm.clientInput.readUTF());
+                                            if (temp <= cgm.callAmount) {
+                                                cgm.players[cgm.myPlayerIndex].chipsInPlay = 0;
+                                            }
+                                            cgm.callAmount = temp;
                                             /*uiHandler.post(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -171,6 +174,9 @@ public class gameThread extends HandlerThread {
                                             Log.d("Jordan", "Winning Player: " + lastPlayer);
                                             j = 0;
                                             activity.onDestroy();
+                                            break;
+                                        case (7) :
+                                            cgm.totalPot = Integer.parseInt(cgm.clientInput.readUTF());
                                             break;
                                         case (9) :
                                             String playersMessage = cgm.clientInput.readUTF();
@@ -260,11 +266,11 @@ public class gameThread extends HandlerThread {
         if (!host) {
             switch (type) {
                 case ('c'):
-                    cgm.players[index].chipsInPlay = (cgm.callAmount - cgm.players[index].chipsInPlay);
+                    cgm.players[index].addChipsInPlay(cgm.callAmount - cgm.players[index].chipsInPlay);
                     break;
                 case ('r'):
                     int raiseAmount = Integer.parseInt(message.substring(1));
-                    cgm.players[index].chipsInPlay = (raiseAmount);
+                    cgm.players[index].addChipsInPlay(raiseAmount - cgm.players[index].chipsInPlay);
                     cgm.callAmount = raiseAmount;
                     break;
                 case ('f'):
@@ -272,6 +278,16 @@ public class gameThread extends HandlerThread {
                     break;
                 case ('e'):
                     cgm.players[index].eliminated = true;
+                    cgm.increaseBlinds(2);
+                    break;
+                case ('s') :
+                    cgm.players[index].addChipsInPlay(cgm.smallBlind);
+                    break;
+                case ('b') :
+                    cgm.players[index].addChipsInPlay(cgm.bigBlind);
+                    break;
+                case ('w') :
+                    cgm.players[index].addChips(Integer.parseInt(message.substring(1)));
                     break;
             }
         } else {
@@ -301,6 +317,7 @@ public class gameThread extends HandlerThread {
             @Override
             public void run() {
                 activity.updateInfo(host);
+
             }
         });
     }

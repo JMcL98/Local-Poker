@@ -23,7 +23,7 @@ public class GameActivity extends AppCompatActivity {
     gameThread gameThread;
     EditText raiseAmount;
     Button callButton, raiseButton, foldButton;
-    TextView currentBet, chipsInPlay, totalChips;
+    TextView currentBet, chipsInPlay, totalChips, pot;
     LinearLayout hand, comCards, commands;
     private String bufferedAction;
     ImageView hand0, hand1, card0, card1, card2, card3, card4;
@@ -39,6 +39,7 @@ public class GameActivity extends AppCompatActivity {
         currentBet = (TextView) findViewById(R.id.currentBet);
         chipsInPlay = (TextView) findViewById(R.id.chipsInPlay);
         totalChips = (TextView) findViewById(R.id.myChips);
+        pot = (TextView) findViewById(R.id.pot);
         raiseAmount = (EditText) findViewById(R.id.raiseAmount);
         hand = (LinearLayout) findViewById(R.id.hand);
         hand0 = (ImageView) findViewById(R.id.hand0);
@@ -163,10 +164,12 @@ public class GameActivity extends AppCompatActivity {
             totalChips.setText("Total Chips: " + hgm.players[myIndex].getChips());
             chipsInPlay.setText("Chips in play: " + hgm.players[myIndex].chipsInPlay);
             currentBet.setText("Current Bet: " + hgm.callAmount);
+            pot.setText("Pot: " + hgm.getPot());
         } else {
             totalChips.setText("Total Chips: " + cgm.players[myIndex].getChips());
             chipsInPlay.setText("Chips in play: " + cgm.players[myIndex].chipsInPlay);
             currentBet.setText("Current Bet: " + cgm.callAmount);
+            pot.setText("Pot: " + cgm.totalPot);
         }
     }
 

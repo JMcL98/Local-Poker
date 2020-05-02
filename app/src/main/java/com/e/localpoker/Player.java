@@ -121,6 +121,7 @@ class Player {
         for (int i = 0; i < numCardsInHand; i++) {
             this.hand[i] = null;
         }
+        chipsInPlay = 0;
         numCardsInHand = 0;
     }
 

@@ -184,4 +184,18 @@
             android:layout_weight="1"
             app:srcCompat="@drawable/bg" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/pot"
+        android:layout_width="147dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="132dp"
+        android:layout_marginEnd="132dp"
+        android:layout_marginBottom="14dp"
+        android:text="Pot: "
+        android:textColor="#000000"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/communityCards"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

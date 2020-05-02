@@ -32,6 +32,8 @@ public class ClientGameManager extends Service implements Parcelable {
     int myPlayerIndex;
     int callAmount;
     int totalPot;
+    int smallBlind;
+    int bigBlind;
     GameActivity gameActivity;
     DeckManager dm;
     DataInputStream clientInput;
@@ -75,6 +77,11 @@ public class ClientGameManager extends Service implements Parcelable {
             return new ClientGameManager[size];
         }
     };
+
+    void increaseBlinds(int multiplyValue) {
+        smallBlind = smallBlind * multiplyValue;
+        bigBlind = bigBlind * multiplyValue;
+    }
 
     void initialisePlayers(int numPlayers, int myIndex) {
         if (numPlayers == 1) {

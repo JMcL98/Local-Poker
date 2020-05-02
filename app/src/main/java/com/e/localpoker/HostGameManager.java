@@ -140,6 +140,11 @@ public class HostGameManager extends Service implements Parcelable {
         }
     }
 
+    void increaseBlinds(int multiplyValue) {
+        smallBlind = smallBlind * multiplyValue;
+        bigBlind = bigBlind * multiplyValue;
+    }
+
     void eliminatePlayer(int ID) {
         int i = 0;
         while (true) {
@@ -151,12 +156,15 @@ public class HostGameManager extends Service implements Parcelable {
             i++;
         }
         playersLeft--;
-        smallBlind = smallBlind * 2;
-        bigBlind = bigBlind * 2;
+        increaseBlinds(2);
     }
 
     void addToPot(int chips) {
         this.chipsPot += chips;
+    }
+
+    int getPot() {
+        return chipsPot;
     }
 
     void receiveCommand(String reply, int playerIndex) {
@@ -193,6 +201,20 @@ public class HostGameManager extends Service implements Parcelable {
                 e.printStackTrace();
             }
         }
+        updateClientPotInfo();
+    }
+
+    void updateClientPotInfo() {
+        for (int i = 1; i < numPlayers; i++) {
+            try {
+                players[i].playerOutput.writeByte(7);
+                players[i].playerOutput.writeUTF(chipsPot + "");
+                players[i].playerOutput.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     void advanceStage() {
@@ -218,11 +240,11 @@ public class HostGameManager extends Service implements Parcelable {
             case (5) :
                 int handStrength = 0;
                 int roundWinner = 0;
-                for (Player player : players) {
-                    if (!player.eliminated) {
-                        int newStrength = HandStrength.calculateStrength(player.getHand());
+                for (int i = 0; i < players.length; i++) {
+                    if (!players[i].eliminated) {
+                        int newStrength = HandStrength.calculateStrength(players[i].getHand());
                         if (newStrength > handStrength) {
-                            roundWinner = player.getPlayerID();
+                            roundWinner = i;
                             handStrength = newStrength;
                         }
                     }
@@ -232,14 +254,23 @@ public class HostGameManager extends Service implements Parcelable {
         }
     }
 
-    void finishRound(int winningPlayerID) {
+    void finishRound(int winningPlayerIndex) {
+        int winningChips = takePot();
+        players[winningPlayerIndex].addChips(winningChips);
+        updateClientPlayerInfo(winningPlayerIndex, "w" + winningChips);
         for (Player player : players) {
-            if (player.getPlayerID() == winningPlayerID) {
-                player.addChips(takePot());
-            }
             if (player.getChips() < 1) {
                 eliminatePlayer(player.getPlayerID());
             }
+            if (player.playerOutput != null) {
+                try {
+                    player.playerOutput.writeByte(5);
+                    player.playerOutput.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
         boolean dealerFound = false;
         while (!dealerFound) {
