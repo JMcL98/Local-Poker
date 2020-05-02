@@ -96,8 +96,8 @@ public class GameActivity extends AppCompatActivity {
         numCardsInPlay = 0;
     }
 
-    void addCard(int index) {
-        switch (numCardsInPlay) {
+    void addCard(int index, int cardNum) {
+        switch (cardNum) {
             case (0) :
                 getCardImage(index, hand0);
                 break;

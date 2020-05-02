@@ -81,17 +81,19 @@ public class ClientGameManager extends Service implements Parcelable {
             numPlayers = 10;
         }
         players = new Player[numPlayers];
-        Arrays.fill(players, null);
+        for (int i = 0; i < numPlayers; i++) {
+            try {
+                players[i] = new Player(0, null);
+                players[i].addChips(STARTING_CHIPS);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         myPlayerIndex = myIndex;
         addPlayer(this.name, this.myPlayerIndex);
     }
 
     void addPlayer(String name, int index) {
-        try {
-            players[index] = new Player(0, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         players[index].setPlayerName(name);
     }
 
@@ -105,9 +107,9 @@ public class ClientGameManager extends Service implements Parcelable {
         }
     }
 
-    void addCard(int index) {
+    void addCard(int index, int cardNum) {
         players[myPlayerIndex].addCard(dm.dealSpecificCard(index));
-        gameActivity.addCard(index);
+        gameActivity.addCard(index, cardNum);
     }
 
     void setGameActivity(GameActivity gameActivity) {

@@ -45,20 +45,29 @@ public class gameThread extends HandlerThread {
                         while (i > 0) {
                             resetUICards();
                             int startingPlayer = hgm.blinds();
-                            hgm.initialDeal();
+                            try {
+                                hgm.initialDeal();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             int j = startingPlayer;
                             while (i < 5) {
                                 updateUIData(true);
-                                resetUICards();
-                                for (Card card : hgm.players[0].getHand())
-                                    if (card != null) {
-                                        uiHandler.post(new addCardRunnable(card.getIndex()));
+                                for (int c = 0; c < hgm.players[0].getHand().length; c++) {
+                                    if (hgm.players[0].getHand()[c] != null) {
+                                        uiHandler.post(new addCardRunnable(hgm.players[0].getHand()[c].getIndex(), c));
                                     }
+                                }
                                 if (j < hgm.numPlayers) {
                                     if (!hgm.players[j].folded) {
                                         if (hgm.players[j].allIn) {
                                             hgm.playersCalled++;
                                         } else {
+                                            try {
+                                                Thread.sleep(150);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
                                             String move;
                                             while (true) {
                                                 move = hgm.players[j].requestMove(hgm.callAmount);
@@ -77,6 +86,7 @@ public class gameThread extends HandlerThread {
 
                                 if (hgm.playersInPlay == hgm.playersCalled) {
                                     i++;
+                                    resetUICards();
                                     hgm.advanceStage();
                                     j = startingPlayer;
                                 }
@@ -107,7 +117,6 @@ public class gameThread extends HandlerThread {
                         activity.setClientManager(cgm);
                         int j = 1;
                         while (j > 0) {
-                            assert cgm != null;
                             if (cgm.clientInput != null) {
                                 try {
                                     byte msgType = cgm.clientInput.readByte();
@@ -149,7 +158,7 @@ public class gameThread extends HandlerThread {
                                             break;
                                         case (4) :
                                             int cardI = Integer.parseInt(cgm.clientInput.readUTF());
-                                            uiHandler.post(new addCardRunnable(cardI));
+                                            uiHandler.post(new addCardRunnable(cardI, cgm.players[cgm.myPlayerIndex].getNumCardsInHand()));
                                             break;
                                         case (5) :
                                             resetUICards();
@@ -219,15 +228,17 @@ public class gameThread extends HandlerThread {
 
     private class addCardRunnable implements Runnable {
         int index;
-        addCardRunnable(int i) {
+        int cardNum;
+        addCardRunnable(int i, int j) {
             this.index = i;
+            this.cardNum = j;
         }
         @Override
         public void run() {
             if (cgm != null) {
-                cgm.addCard(index);
+                cgm.addCard(this.index, this.cardNum);
             } else {
-                activity.addCard(this.index);
+                activity.addCard(this.index, this.cardNum);
             }
         }
     }

@@ -84,6 +84,10 @@ class Player {
         folded = false;
     }
 
+    public int getNumCardsInHand() {
+        return numCardsInHand;
+    }
+
     void addChips(int numChips) {
         this.chips += numChips;
     }

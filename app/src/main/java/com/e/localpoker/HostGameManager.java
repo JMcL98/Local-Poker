@@ -201,16 +201,28 @@ public class HostGameManager extends Service implements Parcelable {
             player.chipsInPlay = 0;
         }
         gameStage++;
+        playersCalled = 0;
         callAmount = 0;
         switch (gameStage) {
             case (2) :
-                dealCommunityCard(0);
-                dealCommunityCard(1);
-                dealCommunityCard(2);
+               // try {
+                    dealCommunityCard(0);
+                   // Thread.sleep(100);
+                    dealCommunityCard(1);
+                    //Thread.sleep(100);
+                    dealCommunityCard(2);
+                   // Thread.sleep(100);
+                //} catch (InterruptedException e) {
+                //    e.printStackTrace();
+                //}
+
+                break;
             case (3) :
                 dealCommunityCard(3);
+                break;
             case (4) :
                 dealCommunityCard(4);
+                break;
             case (5) :
                 int handStrength = 0;
                 int roundWinner = 0;
@@ -224,6 +236,7 @@ public class HostGameManager extends Service implements Parcelable {
                     }
                 }
                 finishRound(roundWinner);
+                break;
         }
     }
 
@@ -310,10 +323,11 @@ public class HostGameManager extends Service implements Parcelable {
         return temp;
     }
 
-    void initialDeal() {
+    void initialDeal() throws InterruptedException {
         for (Player player : players) {
             if (!player.eliminated) {
                 player.addCard(dm.dealCard(60));
+                Thread.sleep(100);
                 player.addCard(dm.dealCard(60));
             }
         }
