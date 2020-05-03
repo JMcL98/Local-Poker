@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 public class ClientGameManager extends Service implements Parcelable {
 
-    private int STARTING_CHIPS = 1000;
+    private int STARTING_CHIPS = 1000; // will be able to be modified in full game
 
     HostGameManager host;
     String name;
@@ -41,11 +41,11 @@ public class ClientGameManager extends Service implements Parcelable {
     DataOutputStream clientOutput;
     NsdClient nsdClient;
 
-    ClientGameManager(Context context, String name) {
+    ClientGameManager(Context context, String name) { // Game manager on client's phone to keep track of player information sent by the host
         this.name = name;
         this.calledContext = context;
         this.dm = new DeckManager();
-        this.callAmount = 0;
+        this.callAmount = 0; // initialise game values
         this.totalPot = 0;
     }
 

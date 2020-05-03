@@ -302,7 +302,7 @@ public class HostGameManager extends Service implements Parcelable {
         }
         Arrays.fill(communityCards, null);
         dm.resetDeck();
-        playersInPlay = numPlayers;
+        playersInPlay = numPlayers - playersLeft;
         this.callAmount = bigBlind;
         gameStage = 1;
     }

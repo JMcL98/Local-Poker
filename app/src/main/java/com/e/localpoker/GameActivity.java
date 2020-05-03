@@ -191,11 +191,17 @@ public class GameActivity extends AppCompatActivity {
             totalChips.setText("Total Chips: " + hgm.players[myIndex].getChips());
             chipsInPlay.setText("Chips in play: " + hgm.players[myIndex].chipsInPlay);
             currentBet.setText("Current Bet: " + hgm.callAmount);
+            if (hgm.players[myIndex].folded) {
+                currentBet.setText("Folded");
+            }
             pot.setText("Pot: " + hgm.getPot());
         } else {
             totalChips.setText("Total Chips: " + cgm.players[myIndex].getChips());
             chipsInPlay.setText("Chips in play: " + cgm.players[myIndex].chipsInPlay);
             currentBet.setText("Current Bet: " + cgm.callAmount);
+            if (cgm.players[myIndex].folded) {
+                currentBet.setText("Folded");
+            }
             pot.setText("Pot: " + cgm.totalPot);
         }
     }

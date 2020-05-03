@@ -66,7 +66,7 @@ public class gameThread extends HandlerThread {
                                     }
                                 }
                                 if (j < hgm.numPlayers) {
-                                    if (!hgm.players[j].folded) {
+                                    if (!hgm.players[j].folded && !hgm.players[j].eliminated) {
                                         if (hgm.players[j].allIn) {
                                             hgm.playersCalled++;
                                         } else {

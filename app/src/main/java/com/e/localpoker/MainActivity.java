@@ -151,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
                 Bundle bundle = data.getExtras();
                 String winner = bundle.getString("winner");
                 pleaseWait.setText("Game Winner: " + winner);
+                playerList.setVisibility(View.INVISIBLE);
+                playerList2.setVisibility(View.INVISIBLE);
             } else if (resultCode == RESULT_CANCELED) {
                 onDestroy();
             }

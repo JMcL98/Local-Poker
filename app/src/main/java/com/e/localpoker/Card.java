@@ -13,7 +13,7 @@ class Card {
         dealt = false;
     }
 
-    boolean checkDealtStatus() {
+    boolean checkDealtStatus() { // Used for the host deckmanager to not deal cards that have already been dealt after picking a random card
         return dealt;
     }
 
@@ -34,7 +34,7 @@ class Card {
         return suit;
     }
 
-    int getIndex() {
+    int getIndex() { // Used to deal specific card on client devices, and the get the correct card drawable
         return index;
     }
 
