@@ -130,6 +130,7 @@ public class gameThread extends HandlerThread {
                             }
                         }
                         hgm.endGame(winningPlayer);
+                        activity.endGame(winningPlayer.getPlayerName());
 
 
                         break;
@@ -221,7 +222,7 @@ public class gameThread extends HandlerThread {
                                             String lastPlayer = cgm.clientInput.readUTF();
                                             Log.d("Jordan", "Winning Player: " + lastPlayer);
                                             j = 0;
-                                            activity.onDestroy();
+                                            activity.endGame(lastPlayer);
                                             break;
                                         case (7) :
                                             cgm.totalPot = Integer.parseInt(cgm.clientInput.readUTF());

@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     ClientGameManager cgm;
     LinearLayout playerList;
     LinearLayout playerList2;
+    TextView pleaseWait;
     int numberOfPlayersDisplayed;
     private boolean ready;
     static Player[] players;
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     public void prepGame(int type) {
         Button hostButton = (Button) findViewById(R.id.button);
         Button clientButton = (Button) findViewById(R.id.button2);
-        TextView pleaseWait = (TextView) findViewById(R.id.textView);
+        pleaseWait = (TextView) findViewById(R.id.textView);
         if (type == 1) {
             ready = true;
             hostButton.setText("Start");
@@ -140,6 +141,22 @@ public class MainActivity extends AppCompatActivity {
             playerList2.addView(tv);
         }
         numberOfPlayersDisplayed++;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MAIN_TO_GAME_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Bundle bundle = data.getExtras();
+                String winner = bundle.getString("winner");
+                pleaseWait.setText("Game Winner: " + winner);
+            } else if (resultCode == RESULT_CANCELED) {
+                onDestroy();
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 

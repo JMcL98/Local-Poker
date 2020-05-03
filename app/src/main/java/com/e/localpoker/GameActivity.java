@@ -2,6 +2,8 @@ package com.e.localpoker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -196,6 +198,16 @@ public class GameActivity extends AppCompatActivity {
             currentBet.setText("Current Bet: " + cgm.callAmount);
             pot.setText("Pot: " + cgm.totalPot);
         }
+    }
+
+    void endGame(String winningPlayer) {
+        Bundle finishBundle = new Bundle();
+        finishBundle.putString("winner", winningPlayer);
+        Intent result = new Intent();
+        result.putExtras(finishBundle);
+        gameThread.quit();
+        setResult(Activity.RESULT_OK, result);
+        finish();
     }
 
     @Override

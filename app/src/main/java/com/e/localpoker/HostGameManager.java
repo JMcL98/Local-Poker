@@ -380,13 +380,15 @@ public class HostGameManager extends Service implements Parcelable {
 
     void endGame(Player winningPlayer) {
         for (Player player : players) {
-            try {
-                player.playerOutput.writeByte(6);
-                player.playerOutput.writeUTF(winningPlayer.getPlayerName());
-                player.playerOutput.flush();
-                player.playerOutput.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (player.playerOutput != null) {
+                try {
+                    player.playerOutput.writeByte(6);
+                    player.playerOutput.writeUTF(winningPlayer.getPlayerName());
+                    player.playerOutput.flush();
+                    player.playerOutput.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
