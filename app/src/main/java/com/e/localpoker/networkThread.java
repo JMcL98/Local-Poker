@@ -5,25 +5,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
-import android.widget.Button;
-import android.widget.Toast;
 
 import java.io.IOException;
-import java.net.Socket;
-import java.util.Objects;
 
-public class hThread extends HandlerThread {
+public class networkThread extends HandlerThread {
 
     private Handler handler;
     private Context calledContext;
-    HostGameManager hgm;
-    ClientGameManager cgm;
+    private HostGameManager hgm;
+    private ClientGameManager cgm;
     private Handler uiHandler;
     private MainActivity mainActivity;
 
-    public hThread(Context context, Handler uiHandler, MainActivity mainActivity) {
+    public networkThread(Context context, Handler uiHandler, MainActivity mainActivity) {
         super("hThread1");
         calledContext = context;
         this.uiHandler = uiHandler;
@@ -49,7 +44,6 @@ public class hThread extends HandlerThread {
                         byte msgType = 0;
                         while (i == 1) {
                             for (int j = 1; j < hgm.numPlayers; j++) {
-
                                 if ((hgm.tempPlayers[j].getPlayerName() == null) && (hgm.tempPlayers[j].playerInput != null)) {
                                     try {
                                         msgType = hgm.tempPlayers[j].playerInput.readByte();
@@ -73,8 +67,6 @@ public class hThread extends HandlerThread {
                                             e.printStackTrace();
                                         }
                                     }
-
-
                                 }
                             }
                             if (!(hgm.hostObj.acceptingPlayers)) {
@@ -82,8 +74,6 @@ public class hThread extends HandlerThread {
                             }
                         }
                         hgm.startGame();
-
-
                         break;
                     case (2):
                         Bundle receivedClientBundle = message.getData();

@@ -2,6 +2,7 @@ package com.e.localpoker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -164,7 +165,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     String getBufferedAction(int minRaise) {
-        //commands.setVisibility(View.VISIBLE);
         if (!bufferedAction.equals("")) {
             if (bufferedAction.charAt(0) == 'r') {
                 if (Integer.parseInt(bufferedAction.substring(1)) < minRaise) {
@@ -173,13 +173,11 @@ public class GameActivity extends AppCompatActivity {
                 } else {
                     String temp = bufferedAction;
                     bufferedAction = "";
-                   // commands.setVisibility(View.INVISIBLE);
                     return temp;
                 }
             } else {
                 String temp = bufferedAction;
                 bufferedAction = "";
-               // commands.setVisibility(View.VISIBLE);
                 return temp;
             }
         }

@@ -16,15 +16,13 @@ import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
     private int MAIN_TO_GAME_REQUEST_CODE = 1;
 
     String serviceName = "LocalPoker";
-    hThread hthread1;
+    networkThread hthread1;
     EditText e1;
     HostGameManager hgm;
     ClientGameManager cgm;
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         e1 = (EditText) findViewById(R.id.editText);
         playerList = (LinearLayout) findViewById(R.id.listOfPlayers);
         playerList2 = (LinearLayout) findViewById(R.id.listOfPlayers2);
-        hthread1 = new hThread(this, new Handler(), this);
+        hthread1 = new networkThread(this, new Handler(), this);
         hthread1.start();
     }
 
@@ -68,10 +66,15 @@ public class MainActivity extends AppCompatActivity {
                 prepGame(1);
             }
         } else {
-            Bundle hostBundle = new Bundle();
-            hostBundle.putBoolean("type", true);
-            hgm.hostObj.acceptingPlayers = false;
-            gameLaunch(hostBundle);
+            if (hgm.tempPlayers.length > 1) {
+                Bundle hostBundle = new Bundle();
+                hostBundle.putBoolean("type", true);
+                hgm.hostObj.acceptingPlayers = false;
+                gameLaunch(hostBundle);
+            } else {
+                Toast toast2 = Toast.makeText(this,"Please wait for more player", Toast.LENGTH_SHORT);
+                toast2.show();
+            }
         }
     }
 
