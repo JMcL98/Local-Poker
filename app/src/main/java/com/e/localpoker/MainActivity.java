@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void clientStart() {
+        cgm.nsdClient.stopDiscovery();
         clientInput = cgm.nsdClient.clientInput;
         clientOutput = cgm.nsdClient.clientOutput;
         Bundle clientBundle = new Bundle();
@@ -158,6 +160,19 @@ public class MainActivity extends AppCompatActivity {
                 playerList2.setVisibility(View.INVISIBLE);
             } else if (resultCode == RESULT_CANCELED) {
                 onDestroy();
+            }
+            if (hgm != null) {
+                try {
+                    hgm.hostObj.closeService();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (cgm != null) {
+                try {
+                    cgm.nsdClient.closeService();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

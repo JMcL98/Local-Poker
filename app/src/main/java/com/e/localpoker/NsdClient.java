@@ -127,4 +127,10 @@ public class NsdClient {
         clientOutput.writeUTF(deviceName);
         clientOutput.flush();
     }
+
+    public void closeService() throws IOException {
+        if (nsdManager != null) {
+            hostSocket.close();
+        }
+    }
 }

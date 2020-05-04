@@ -1,21 +1,13 @@
 package com.e.localpoker;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.nsd.NsdManager;
-import android.net.nsd.NsdServiceInfo;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-import android.widget.Toast;
-
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Arrays;
 
 public class HostGameManager extends Service implements Parcelable {
@@ -101,20 +93,19 @@ public class HostGameManager extends Service implements Parcelable {
     }
 
     void startGame() {
-        for (int i = 0; i < tempPlayers.length; i++) {
-            if (tempPlayers[i] != null) {
-                if (tempPlayers[i].playerOutput != null) {
+        for (Player player : tempPlayers) {
+            if (player != null) {
+                if (player.playerOutput != null) {
                     try {
-                        tempPlayers[i].playerOutput.writeByte(1);
-                        tempPlayers[i].playerOutput.writeUTF("start_game");
-                        tempPlayers[i].playerOutput.flush();
+                        player.playerOutput.writeByte(1);
+                        player.playerOutput.writeUTF("start_game");
+                        player.playerOutput.flush();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
-
     }
 
     void sendNames() {
@@ -171,18 +162,18 @@ public class HostGameManager extends Service implements Parcelable {
     void receiveCommand(String reply, int playerIndex) {
         char type = reply.charAt(0);
         switch (type) {
-            case 'c':
+            case 'c': // call
                 players[playerIndex].addChipsInPlay(callAmount - players[playerIndex].chipsInPlay);
                 playersCalled++;
                 updateClientPlayerInfo(playerIndex, "c");
                 break;
-            case 'r':
-                players[playerIndex].addChipsInPlay((Integer.parseInt(reply.substring(1))) - players[playerIndex].chipsInPlay); // double current call
+            case 'r': // raise
+                players[playerIndex].addChipsInPlay((Integer.parseInt(reply.substring(1))) - players[playerIndex].chipsInPlay);
                 playersCalled = 1;
                 updateClientPlayerInfo(playerIndex, "r" + (reply.substring(1)));
                 callAmount = Integer.parseInt(reply.substring(1));
                 break;
-            case 'f':
+            case 'f': // fold
                 players[playerIndex].fold();
                 playersInPlay--;
                 updateClientPlayerInfo(playerIndex, "f");
@@ -261,7 +252,6 @@ public class HostGameManager extends Service implements Parcelable {
     }
 
     void finishRound(int winningPlayerIndex) {
-        Log.d("Jordan", "Round winner: " + players[winningPlayerIndex].getPlayerName());
         int winningChips = takePot();
         players[winningPlayerIndex].addChips(winningChips);
         updateClientPlayerInfo(winningPlayerIndex, "w" + winningChips);
@@ -277,7 +267,6 @@ public class HostGameManager extends Service implements Parcelable {
                     e.printStackTrace();
                 }
             }
-
         }
         boolean dealerFound = false;
         while (!dealerFound) {
@@ -290,7 +279,6 @@ public class HostGameManager extends Service implements Parcelable {
             } else {
                 dealerFound = true;
             }
-
         }
     }
 
@@ -354,7 +342,7 @@ public class HostGameManager extends Service implements Parcelable {
         return temp;
     }
 
-    void initialDeal() throws InterruptedException {
+    void initialDeal() {
         for (Player player : players) {
             if (!player.eliminated) {
                 player.addCard(dm.dealCard(60));

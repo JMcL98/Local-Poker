@@ -86,10 +86,6 @@ public class NsdHost {
         };
     }
 
-    void sendCard(Card card) {
-
-    }
-
     void acceptPlayers() throws IOException {
         while (acceptingPlayers = true) {
             Socket newSocket = serverSocket.accept();
