@@ -1,7 +1,5 @@
 package com.e.localpoker;
 
-import android.util.Log;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -21,17 +19,14 @@ class Player {
     boolean r;
     DataOutputStream playerOutput;
     DataInputStream playerInput;
-    Socket socket;
-    GameActivity ga;
+    private GameActivity ga;
 
     Player (int playerID, Socket clientSocket) throws IOException {
         this.playerID = playerID;
         if (playerID > 0) {
-            this.socket = clientSocket;
             this.playerOutput = new DataOutputStream(clientSocket.getOutputStream());
             this.playerInput = new DataInputStream(clientSocket.getInputStream());
         } else {
-            this.socket = null;
             this.playerOutput = null;
             this.playerInput = null;
         }
@@ -48,7 +43,6 @@ class Player {
 
     void setPlayerName(String name) {
         this.playerName = name;
-        Log.d("Jordan", "New player added: " + getPlayerName());
     }
 
     void setGameActivity(GameActivity ga) {
@@ -86,7 +80,7 @@ class Player {
         folded = false;
     }
 
-    public int getNumCardsInHand() {
+    int getNumCardsInHand() {
         return numCardsInHand;
     }
 
