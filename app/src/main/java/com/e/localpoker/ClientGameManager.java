@@ -1,25 +1,14 @@
 package com.e.localpoker;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.InetAddresses;
-import android.net.nsd.NsdManager;
-import android.net.nsd.NsdServiceInfo;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.Toast;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.Arrays;
 
 public class ClientGameManager extends Service implements Parcelable {
 
@@ -31,7 +20,6 @@ public class ClientGameManager extends Service implements Parcelable {
     Player[] players;
     int myPlayerIndex;
     int callAmount;
-    int chipsInPlay;
     int totalPot;
     int smallBlind;
     int bigBlind;
@@ -126,14 +114,12 @@ public class ClientGameManager extends Service implements Parcelable {
         }
     }
 
-    void addCard(int index, int cardNum) {
+    void addCard(int index) {
         players[myPlayerIndex].addCard(dm.dealSpecificCard(index));
         if (players[myPlayerIndex].r) {
             callAmount = 0;
             players[myPlayerIndex].r = false;
         }
-
-//        gameActivity.addCard(index, cardNum);
     }
 
     void setGameActivity(GameActivity gameActivity) {
