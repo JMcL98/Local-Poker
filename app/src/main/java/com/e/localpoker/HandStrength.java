@@ -1,8 +1,5 @@
 package com.e.localpoker;
 
-import android.util.Log;
-import android.widget.Switch;
-
 final class HandStrength {
 
     static int calculateStrength(Card[] hand) {

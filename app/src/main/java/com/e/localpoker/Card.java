@@ -13,7 +13,7 @@ class Card {
         dealt = false;
     }
 
-    boolean checkDealtStatus() { // Used for the host deckmanager to not deal cards that have already been dealt after picking a random card
+    boolean checkDealtStatus() { // Used for the HostDeckManager to not deal cards that have already been dealt after picking a random card
         return dealt;
     }
 

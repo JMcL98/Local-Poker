@@ -48,11 +48,7 @@ public class gameThread extends HandlerThread {
                         while (i > 0) {
                             resetUICards();
                             int startingPlayer = hgm.blinds();
-                            try {
-                                hgm.initialDeal();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                            hgm.initialDeal();
                             int j = startingPlayer;
                             while (i < 5) {
                                 updateUIData(true);
@@ -161,7 +157,7 @@ public class gameThread extends HandlerThread {
                                             break;
                                         case (4) :
                                             int cardI = Integer.parseInt(cgm.clientInput.readUTF());
-                                            cgm.addCard(cardI, cgm.players[cgm.myPlayerIndex].getNumCardsInHand());
+                                            cgm.addCard(cardI);
                                             for (int c = 0; c < cgm.players[cgm.myPlayerIndex].getHand().length; c++) {
                                                 if (cgm.players[cgm.myPlayerIndex].getHand()[c] != null) {
                                                     uiHandler.post(new addCardRunnable(cgm.players[cgm.myPlayerIndex].getHand()[c].getIndex(), c));

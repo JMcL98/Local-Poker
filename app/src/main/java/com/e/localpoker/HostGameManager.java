@@ -345,14 +345,14 @@ public class HostGameManager extends Service implements Parcelable {
     void initialDeal() {
         for (Player player : players) {
             if (!player.eliminated) {
-                player.addCard(dm.dealCard(60));
-                player.addCard(dm.dealCard(60));
+                player.addCard(dm.dealCard());
+                player.addCard(dm.dealCard());
             }
         }
     }
 
     void dealCommunityCard(int index) {
-        communityCards[index] = dm.dealCard(60);
+        communityCards[index] = dm.dealCard();
         for (Player player : players) {
             if (!player.eliminated && !player.folded) {
                 player.addCard(communityCards[index]);
