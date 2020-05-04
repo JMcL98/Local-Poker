@@ -32,13 +32,9 @@ class NsdHost {
 
     private void registerService(int port) {
         NsdServiceInfo info = new NsdServiceInfo();
-
         info.setServiceName(serviceName);
         info.setServiceType("_http._tcp.");
         info.setPort(port);
-
-
-
         if (nsdManager != null) {
             nsdManager.registerService(info, NsdManager.PROTOCOL_DNS_SD, registrationListener);
         }

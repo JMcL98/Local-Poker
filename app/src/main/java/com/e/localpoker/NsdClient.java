@@ -96,6 +96,7 @@ class NsdClient {
             }
         };
         this.nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
+        assert nsdManager != null;
         nsdManager.discoverServices("_http._tcp.", NsdManager.PROTOCOL_DNS_SD, listener);
 
     }
