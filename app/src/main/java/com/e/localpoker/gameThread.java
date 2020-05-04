@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
 
 import java.io.IOException;
 
@@ -30,7 +29,6 @@ public class gameThread extends HandlerThread {
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case (1) :
-                        Bundle receivedHostBundle = message.getData();
                         hgm = new HostGameManager(MainActivity.players);
                         activity.setHostManager(hgm);
                         while (true) {
@@ -47,7 +45,6 @@ public class gameThread extends HandlerThread {
                         activity.setPlayerNames(names, true);
                         hgm.resetRound();
                         int i = 1;
-                        Log.d("Jordan", "Game Started");
                         while (i > 0) {
                             resetUICards();
                             int startingPlayer = hgm.blinds();
@@ -73,11 +70,9 @@ public class gameThread extends HandlerThread {
                                             String move;
                                             if (j == 0) {
                                                 uiHandler.post(new Runnable() {
+                                                    @SuppressLint("SetTextI18n")
                                                     @Override
                                                     public void run() {
-                                                        // if (cgm.callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
-                                                        //     activity.callButton.setText("Check");
-                                                        // }
                                                         if (hgm.callAmount > 0) {
                                                             activity.raiseAmount.setText("" + (hgm.callAmount * 2));
                                                         } else {
@@ -118,68 +113,37 @@ public class gameThread extends HandlerThread {
                                     e.printStackTrace();
                                 }
                             }
-
                         }
                         Player winningPlayer = null;
                         for (Player player : hgm.players) {
                             if (!player.eliminated) {
                                 winningPlayer = player;
-                                Log.d("Jordan", "Game Finished");
-                                Log.d("Jordan", "Winning player: " + winningPlayer.getPlayerName());
                                 break;
                             }
                         }
+                        assert winningPlayer != null;
                         hgm.endGame(winningPlayer);
                         activity.endGame(winningPlayer.getPlayerName());
-
-
                         break;
                     case (2) :
                         Bundle receivedClientBundle = message.getData();
                         cgm = new ClientGameManager(MainActivity.clientOutput, MainActivity.clientInput, receivedClientBundle.getString("name"));
                         activity.setClientManager(cgm);
                         int j = 1;
-                        int check = 1;
+                        byte msgType;
+                        int playerMessageIndex;
+                        int myIndex;
                         while (j > 0) {
-                           /* if (check < 1) {
-                                final String[] names2 = new String[cgm.players.length];
-                                for (int a = 0; a < names2.length; a++) {
-                                    names2[a] = cgm.players[a].getPlayerName();
-                                }
-                                uiHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        activity.setPlayerNames(names2, false);
-                                    }
-                                });
-
-                                check = 1;
-                            }*/
                             if (cgm.clientInput != null) {
                                 try {
-                                    byte msgType = cgm.clientInput.readByte();
-                                    int playerMessageIndex;
-                                    int myIndex;
+                                    msgType = cgm.clientInput.readByte();
                                     updateUIData(false);
                                     switch (msgType) {
-                                        case (1) :
-
-                                            break;
-                                        case (2) :
-                                            // update user values
-                                            break;
                                         case (3) :
-                                            int temp = Integer.parseInt(cgm.clientInput.readUTF());
-                                            //if (temp <= cgm.callAmount) {
-                                             //   cgm.players[activity.myIndex].chipsInPlay = 0;
-                                          //  }
-                                            cgm.callAmount = temp;
+                                            cgm.callAmount = Integer.parseInt(cgm.clientInput.readUTF());
                                             uiHandler.post(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                   // if (cgm.callAmount == cgm.players[cgm.myPlayerIndex].chipsInPlay) {
-                                                   //     activity.callButton.setText("Check");
-                                                   // }
                                                     if (cgm.callAmount > 0) {
                                                         activity.raiseAmount.setText("" + (cgm.callAmount * 2));
                                                     } else {
@@ -194,13 +158,6 @@ public class gameThread extends HandlerThread {
                                                     break;
                                                 }
                                             }
-                                           /* uiHandler.post(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    activity.callButton.setText("Call");
-                                                }
-                                            });*/
-                                            //cgm.chipsInPlay = cgm.players[cgm.myPlayerIndex].chipsInPlay;
                                             break;
                                         case (4) :
                                             int cardI = Integer.parseInt(cgm.clientInput.readUTF());
@@ -215,8 +172,6 @@ public class gameThread extends HandlerThread {
                                         case (5) :
                                             resetUICards();
                                             cgm.resetHand();
-                                            check = 0;
-                                            // more
                                             break;
                                         case (6) :
                                             String lastPlayer = cgm.clientInput.readUTF();
@@ -264,25 +219,6 @@ public class gameThread extends HandlerThread {
         };
     }
 
-    private class commandRunnable implements Runnable {
-
-        int index;
-        commandRunnable(int j) {
-            this.index = j;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                String move = hgm.players[index].requestMove(hgm.callAmount);
-                if (!move.equals("")) {
-                    hgm.receiveCommand(move, index);
-                    break;
-                }
-            }
-        }
-    }
-
     private class addCardRunnable implements Runnable {
         int index;
         int cardNum;
@@ -292,11 +228,7 @@ public class gameThread extends HandlerThread {
         }
         @Override
         public void run() {
-            //if (cgm != null) {
-            //    cgm.addCard(this.index, this.cardNum);
-           // } else {
-                activity.addCard(this.index, this.cardNum);
-           // }
+            activity.addCard(this.index, this.cardNum);
         }
     }
 
@@ -315,28 +247,28 @@ public class gameThread extends HandlerThread {
         char type = message.charAt(0);
         if (!host) {
             switch (type) {
-                case ('c'):
+                case ('c'): // call
                     cgm.players[index].addChipsInPlay(cgm.callAmount - cgm.players[index].chipsInPlay);
                     break;
-                case ('r'):
+                case ('r'): // raise
                     int raiseAmount = Integer.parseInt(message.substring(1));
                     cgm.players[index].addChipsInPlay(raiseAmount - cgm.players[index].chipsInPlay);
                     cgm.callAmount = raiseAmount;
                     break;
-                case ('f'):
+                case ('f'): // fold
                     cgm.players[index].fold();
                     break;
-                case ('e'):
+                case ('e'): // eliminated
                     cgm.players[index].eliminated = true;
                     cgm.increaseBlinds(2);
                     break;
-                case ('s') :
+                case ('s') : // small blind
                     cgm.players[index].addChipsInPlay(cgm.smallBlind);
                     break;
-                case ('b') :
+                case ('b') : // big blind
                     cgm.players[index].addChipsInPlay(cgm.bigBlind);
                     break;
-                case ('w') :
+                case ('w') : // round winner
                     cgm.players[index].addChips(Integer.parseInt(message.substring(1)));
                     break;
             }
@@ -369,17 +301,12 @@ public class gameThread extends HandlerThread {
             @Override
             public void run() {
                 activity.updateInfo(host);
-                if (host) {
-
-                }
-
             }
         });
     }
 
     private class updateGameInfo implements Runnable {
         Player[] players;
-
         updateGameInfo(Player[] players) {
             this.players = players;
         }
